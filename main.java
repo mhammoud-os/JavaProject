@@ -11,6 +11,7 @@ public class JavaProject {
 	final static int HEIGHT = 720;
 	GraphicsConsole gc = new GraphicsConsole(WIDTH,HEIGHT);
 	Rectangle rect = new Rectangle(0,700, 1280,20);
+	Rectangle rect2 = new Rectangle(200,400, 120,20);
 
 	public static void main(String[] args) {
 		new JavaProject();
@@ -32,11 +33,13 @@ public class JavaProject {
 			gc.clear();
 			gc.setColor(new Color(100,100,100));
 			gc.fillRect(rect.x,rect.y, rect.width, rect.height);
+			gc.fillRect(rect2.x,rect2.y, rect2.width, rect2.height);
 			gc.setColor(new Color(0,0,0));
 			gc.fillRect(player.x, player.y, player.width, player.height);
 			//player.moveRight();
 			player.fall();
 			player.DetectPlatform(rect);
+			player.DetectPlatform(rect2);
 
 		}
 	}
