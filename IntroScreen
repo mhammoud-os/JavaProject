@@ -1,9 +1,10 @@
+
 /*
  * by: Milo
  * date: January 16, 2024
  * Introduction screen
  */
- 
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Rectangle;
@@ -17,17 +18,23 @@ public class IntroScreen {
 
 	}
 	
+	//Window size
 	public static int winX = 1280;
 	public static int winY = 720;
 	
+	//Graphics Consoles
 	GraphicsConsole gc = new GraphicsConsole(winX, winY, "LeapDuel Arena");
 	GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
 	
+	//Start button variables
 	int startX = winX/2 - 100;
 	int startY = winY/2 + 225;
 	int startW = 175;
 	int startH = 75;
+	
 	Rectangle startButton = new Rectangle(startX, startY, startW, startH);
+	
+	static int mouseX, mouseY;
 	
 	IntroScreen() {
 		setupIntro();
@@ -78,5 +85,10 @@ public class IntroScreen {
 		//gcIntro.clear();
 		//gc.clear();
 	}
+	
+	static boolean checkStart() {
+		mouseX = gcIntro.getMouseX();
+	}
 
 }
+
