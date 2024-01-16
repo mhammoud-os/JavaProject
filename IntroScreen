@@ -1,0 +1,82 @@
+/*
+ * by: Milo
+ * date: January 16, 2024
+ * Introduction screen
+ */
+ 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Rectangle;
+
+import hsa2.GraphicsConsole;
+
+public class IntroScreen {
+
+	public static void main(String[] args) {
+		new IntroScreen();
+
+	}
+	
+	public static int winX = 1280;
+	public static int winY = 720;
+	
+	GraphicsConsole gc = new GraphicsConsole(winX, winY, "LeapDuel Arena");
+	GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
+	
+	int startX = winX/2 - 100;
+	int startY = winY/2 + 225;
+	int startW = 175;
+	int startH = 75;
+	Rectangle startButton = new Rectangle(startX, startY, startW, startH);
+	
+	IntroScreen() {
+		setupIntro();
+	}
+	
+	void setupIntro() {
+		//Set the visible screens
+		gcIntro.setVisible(true);
+		gc.setVisible(false);
+		
+		//Set up other stuff
+		gcIntro.setAntiAlias(true);
+		gcIntro.setLocationRelativeTo(null);
+		gcIntro.setBackgroundColor(new Color(222, 213, 42));
+		gcIntro.clear();
+		
+		//Fonts and colours
+		Font titleFont = new Font("Comic Sans MS", Font.PLAIN, 50);
+		Font bodyFont = new Font("Comic Sans MS", Font.PLAIN, 30);
+		Color blue1 = new Color(42, 81, 222);
+		Color green1 = new Color(21, 150, 23);
+		
+		//Welcome
+		gcIntro.setColor(blue1);
+		gcIntro.setFont(titleFont);
+		gcIntro.drawString("Welcome to LeapDuel Arena!", winX/2 - 325, winY/2 - 225);
+		
+		//Show rules
+		gcIntro.setFont(bodyFont);
+		gcIntro.drawString("Rules: ", winX/2 - 60, winY/2 - 135);
+		gcIntro.drawString("Move left, right, and jump with wasd or arrow keys.", winX/2 - 350, winY/2 - 75);
+		gcIntro.drawString("The goal of the game is to jump on the other player.", winX/2 -  350, winY/2 - 25);
+		gcIntro.drawString("You have 3 lives, and you lose one if you get jumped on.", winX/2 - 375, winY/2 + 25);
+		gcIntro.drawString("Last one standing wins!", winX/2 - 175, winY/2 + 75);
+		
+		gcIntro.drawString("Click the button to start the game!", winX/2 - 250, winY/2 + 175);
+		
+		gcIntro.setColor(green1);
+		gcIntro.fillRect(startX, startY, startW, startH);
+		
+		gcIntro.setColor(blue1);
+		gcIntro.drawString("START!", startX + 25, startY + 50);
+		
+		gcIntro.enableMouse();
+		gcIntro.enableMouseMotion();
+		gc.getMouseClick();
+		
+		//gcIntro.clear();
+		//gc.clear();
+	}
+
+}
