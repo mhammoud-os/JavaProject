@@ -1,4 +1,3 @@
-
 /*
  * by: Milo
  * date: January 16, 2024
@@ -15,7 +14,7 @@ public class IntroScreen {
 
 	public static void main(String[] args) {
 		new IntroScreen();
-
+		
 	}
 	
 	//Window size
@@ -23,21 +22,28 @@ public class IntroScreen {
 	public static int winY = 720;
 	
 	//Graphics Consoles
-	GraphicsConsole gc = new GraphicsConsole(winX, winY, "LeapDuel Arena");
-	GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
+	static GraphicsConsole gc = new GraphicsConsole(winX, winY, "LeapDuel Arena");
+	static GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
 	
 	//Start button variables
-	int startX = winX/2 - 100;
-	int startY = winY/2 + 225;
-	int startW = 175;
-	int startH = 75;
+	static int startX = winX/2 - 100;
+	static int startY = winY/2 + 225;
+	static int startW = 175;
+	static int startH = 75;
 	
-	Rectangle startButton = new Rectangle(startX, startY, startW, startH);
+	static Rectangle startButton = new Rectangle(startX, startY, startW, startH);
 	
 	static int mouseX, mouseY;
 	
 	IntroScreen() {
 		setupIntro();
+		
+		while (!checkStart()) {
+			gcIntro.sleep(500);
+		}
+		
+		switchScreen();
+		
 	}
 	
 	void setupIntro() {
@@ -80,7 +86,7 @@ public class IntroScreen {
 		
 		gcIntro.enableMouse();
 		gcIntro.enableMouseMotion();
-		gc.getMouseClick();
+		gcIntro.getMouseClick();
 		
 		//gcIntro.clear();
 		//gc.clear();
@@ -88,7 +94,33 @@ public class IntroScreen {
 	
 	static boolean checkStart() {
 		mouseX = gcIntro.getMouseX();
+		mouseY = gcIntro.getMouseY();
+		
+		/*
+		if (startButton.contains(mouseX, mouseY)) {
+			return true;
+		} 
+		*/
+		
+		if (gcIntro.getMouseClick() == 0) {
+			gcIntro.setBackgroundColor(Color.GREEN);
+			
+			if (startButton.contains(mouseX, mouseY)) {
+				
+				return true;
+			} else return false;
+		} else return false;
+		
+	}
+	
+	void switchScreen() {
+		gcIntro.setVisible(false);
+		gc.setVisible(true);
+		
+		gcIntro.clear();
+		gc.clear();
+		
+		gc.setBackgroundColor(Color.BLUE);
 	}
 
 }
-
