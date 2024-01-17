@@ -1,0 +1,150 @@
+package graphics;
+
+/*
+ * by: Milo
+ * date: January 16, 2024
+ * Introduction screen
+ */
+
+//Imports
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Rectangle;
+
+import hsa2.GraphicsConsole;
+
+public class IntroScreen {
+
+	public static void main(String[] args) {
+		new IntroScreen();
+		
+	}
+	
+	//Window size
+	public static int winX = 1280;
+	public static int winY = 720;
+	
+	//Graphics Consoles
+	static GraphicsConsole gc = new GraphicsConsole(winX, winY, "LeapDuel Arena");
+	static GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
+	
+	//Start button variables
+	static int startX = winX/2 - 100;
+	static int startY = winY/2 + 225;
+	static int startW = 175;
+	static int startH = 75;
+	
+	static Rectangle startButton = new Rectangle(startX, startY, startW, startH);
+	
+	//Mouse coordinates
+	static int mouseX, mouseY;
+	
+	//Fonts and colours
+	static Font titleFont = new Font("Comic Sans MS", Font.PLAIN, 50);
+	static Font titleFont2 = new Font("Tahoma", Font.PLAIN, 50);
+	static Font bodyFont = new Font("Comic Sans MS", Font.PLAIN, 30);
+	static Font bodyFont2 = new Font("Dialog", Font.PLAIN, 30);
+	static Color blue1 = new Color(42, 81, 222);
+	static Color green1 = new Color(21, 150, 23);
+	
+	/**
+	 * Constructor thing
+	 */
+	IntroScreen() {
+		setupIntro();
+		
+		while (!checkStart()) {
+			drawScreen(150);
+			gcIntro.sleep(500);
+			drawScreen(100);
+			gcIntro.sleep(500);
+		}
+		
+		switchScreen();
+		
+	}
+	
+	void setupIntro() {
+		//Set the visible screens
+		gcIntro.setVisible(true);
+		gc.setVisible(false);
+		
+		//Set up other stuff
+		gcIntro.setAntiAlias(true);
+		gcIntro.setLocationRelativeTo(null);
+		gcIntro.setBackgroundColor(new Color(222, 213, 42));
+		gcIntro.clear();
+		
+		//Enable mouse
+		gcIntro.enableMouse();
+		gcIntro.enableMouseMotion();
+		gcIntro.getMouseClick();
+		
+		//gcIntro.clear();
+		//gc.clear();
+	}
+	
+	/**
+	 * Checks if the start button has been clicked
+	 * @return if the player clicked start yet
+	 */
+	static boolean checkStart() {
+		mouseX = gcIntro.getMouseX();
+		mouseY = gcIntro.getMouseY();
+		
+		if (gcIntro.getMouseClick() != 0) {
+			if (startButton.contains(mouseX, mouseY)) {
+				return true;
+			} else return false;
+		} else return false;
+		
+	}
+	
+	/**
+	 * Draws the graphics
+	 */
+	void drawScreen(int w) {
+		synchronized(gcIntro) {
+			
+			IntroBlock block = new IntroBlock(winX, w);
+			
+			//Welcome
+			gcIntro.setColor(blue1);
+			gcIntro.setFont(titleFont2);
+			gcIntro.drawString("Welcome to LeapDuel Arena!", winX/2 - 325, winY/2 - 225);
+					
+			//Show rules
+			gcIntro.setFont(bodyFont2);
+			gcIntro.drawString("Rules: ", winX/2 - 60, winY/2 - 135);
+			gcIntro.drawString("Move left, right, and jump with wasd or arrow keys.", winX/2 - 345, winY/2 - 75);
+			gcIntro.drawString("The goal of the game is to jump on the other player.", winX/2 -  345, winY/2 - 25);
+			gcIntro.drawString("You have 3 lives, and you lose one if you get jumped on.", winX/2 - 370, winY/2 + 25);
+			gcIntro.drawString("Last one standing wins!", winX/2 - 170, winY/2 + 75);
+			
+			gcIntro.drawString("Click the button to start the game!", winX/2 - 245, winY/2 + 175);
+				
+			//Draw button
+			gcIntro.setColor(green1);
+			gcIntro.fillRect(startX, startY, startW, startH);
+					
+			gcIntro.setColor(blue1);
+			gcIntro.drawString("START!", startX + 30, startY + 50);
+			
+		}
+	}
+	
+	/**
+	 * Switches to the main graphics console
+	 */
+	void switchScreen() {
+		gcIntro.setVisible(false);
+		gc.setVisible(true);
+		
+		gcIntro.clear();
+		gc.clear();
+		
+		gc.setLocationRelativeTo(null);
+		gc.setBackgroundColor(Color.BLUE);
+	}
+
+}
