@@ -96,17 +96,8 @@ public class IntroScreen {
 		mouseX = gcIntro.getMouseX();
 		mouseY = gcIntro.getMouseY();
 		
-		/*
-		if (startButton.contains(mouseX, mouseY)) {
-			return true;
-		} 
-		*/
-		
-		if (gcIntro.getMouseClick() == 0) {
-			gcIntro.setBackgroundColor(Color.GREEN);
-			
+		if (gcIntro.getMouseClick() != 0) {
 			if (startButton.contains(mouseX, mouseY)) {
-				
 				return true;
 			} else return false;
 		} else return false;
@@ -120,6 +111,7 @@ public class IntroScreen {
 		gcIntro.clear();
 		gc.clear();
 		
+		gc.setLocationRelativeTo(null);
 		gc.setBackgroundColor(Color.BLUE);
 	}
 
