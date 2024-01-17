@@ -1,0 +1,20 @@
+package graphics;
+
+import java.awt.Rectangle;
+
+public class IntroBlock {
+	
+	int blockX, blockY;
+	
+	IntroBlock(int wx, int width) {
+		if(width == 150) {
+			blockX = 100;
+		} else blockX = 125;
+		
+		Rectangle block = new Rectangle(blockX, 0, width, 50);
+	}
+	
+	void moveBlock() {
+		
+	}
+}
