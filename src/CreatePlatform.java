@@ -1,7 +1,6 @@
 import hsa2.GraphicsConsole;
 import java.awt.Color;
 import java.util.Random;
-import java.lang.Math;
 
 public class CreatePlatform {
     GraphicsConsole gc = new GraphicsConsole(1280, 720);
@@ -10,6 +9,7 @@ public class CreatePlatform {
     public static void main(String[] args) {
         new CreatePlatform();
     }
+
     void setup() {
         gc.setBackgroundColor(Color.WHITE);
         gc.clear();
@@ -17,29 +17,32 @@ public class CreatePlatform {
 
     CreatePlatform() {
         setup();
-        Platform MainP = new Platform(0, 720-100, 1280, 100);
-        gc.setColor(Color.GREEN);
-        gc.fillRect(MainP.x, MainP.y, MainP.width, MainP.height);
 
-        int[] Blocks = new int[200];
+        Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
+        gc.setColor(Color.GREEN);
+        gc.fillRect(mainPlatform.x, mainPlatform.y, mainPlatform.width, mainPlatform.height);
+
+        int[] blocks = new int[200];
         for (int i = 0; i < 200; i++) {
-            Blocks[i] = rand.nextInt(0, 2);
-            System.out.println(Blocks[i]);
+            blocks[i] = rand.nextInt(0, 2);
+            System.out.println(blocks[i]);
         }
 
         for (int i = 0; i < 200; i++) {
-            if (Blocks[i] == 1) {
+            if (blocks[i] == 1) {
                 gc.setColor(Color.BLACK);
 
-                int r_x = 175 + (31*(i%30));
-                int r_y = 100 + (48 * ((int)(i/20)));
-                int r_width = 30;
-                int r_height = 30;
-                System.out.println(r_x);
-                System.out.println(r_y);
-                System.out.println(r_width);
-                System.out.println(r_height);
-                gc.fillRect(r_x, r_y, r_width, r_height);
+                int rectX = 175 + (31 * (i % 30));
+                int rectY = 100 + (48 * (i / 20));
+                int rectWidth = 30;
+                int rectHeight = 30;
+
+                System.out.println(rectX);
+                System.out.println(rectY);
+                System.out.println(rectWidth);
+                System.out.println(rectHeight);
+
+                gc.fillRect(rectX, rectY, rectWidth, rectHeight);
             }
         }
     }

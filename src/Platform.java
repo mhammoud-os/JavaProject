@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Rectangle;
 
 public class Platform extends Rectangle {
     Platform(int x, int y, int width, int height) {
@@ -7,6 +7,4 @@ public class Platform extends Rectangle {
         this.width = width;
         this.height = height;
     }
-
 }
-
