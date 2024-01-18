@@ -29,39 +29,6 @@ public class CreatePlatform {
 
         createBlocks();
         drawBlocks();
-
-        /*
-        int[] blocks = new int[200];
-        for (int i = 0; i < 200; i++) {
-            blocks[i] = rand.nextInt(0, 2);
-            System.out.println(blocks[i]);
-        }
-        */
-
-        /*
-        for (int i = 0; i < 200; i++) {
-            if (blocks[i] == 1) {
-                gc.setColor(Color.BLACK);
-
-                int rectX = 175 + (31 * (i % 30));
-                int rectY = 100 + (48 * (i / 20));
-                int rectWidth = 30;
-                int rectHeight = 30;
-
-                System.out.println(rectX);
-                System.out.println(rectY);
-                System.out.println(rectWidth);
-                System.out.println(rectHeight);
-
-                gc.setStroke(6);
-                gc.setColor(Color.BLACK);
-                gc.fillRect(rectX, rectY, rectWidth, rectHeight);
-                gc.drawRect(rectX, rectY, rectWidth, rectHeight);
-            }
-        }
-        */
-
-
     }
 
     void createBlocks() {
@@ -79,8 +46,8 @@ public class CreatePlatform {
                 if (blocks[i][j] == 1 && i % 2 == 1) {
                     gc.setColor(Color.BLACK);
 
-                    int rectX = 100 + (31 * (j));
-                    int rectY = 100 + (48 * (i));
+                    int rectX = 80 + (31 * (j));
+                    int rectY = 75 + (48 * (i));
                     int rectWidth = 30;
                     int rectHeight = 30;
 
