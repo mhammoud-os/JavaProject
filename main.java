@@ -10,8 +10,8 @@ public class JavaProject {
 	final static int WIDTH = 1280;
 	final static int HEIGHT = 720;
 	GraphicsConsole gc = new GraphicsConsole(WIDTH,HEIGHT);
-	Rectangle rect = new Rectangle(0,700, 1280,20);
-	Rectangle rect2 = new Rectangle(200,400, 120,20);
+	Platform first = new Platform(0,700, 1280,20);
+	Platform secound = new Platform(200,400, 120,50);
 
 	public static void main(String[] args) {
 		new JavaProject();
@@ -23,23 +23,27 @@ public class JavaProject {
 		gc.setLocationRelativeTo(null);
 		gc.setBackgroundColor(new Color(255,255,255));
 		gc.clear();
+		
 
 		gc.enableMouse();
 		gc.enableMouseMotion();
 	}
-	Player player = new Player(10,10,10);
+	Player player = new Player(10,40,40);
 	void drawGraphics() {
 		synchronized(gc) {
 			gc.clear();
 			gc.setColor(new Color(100,100,100));
-			gc.fillRect(rect.x,rect.y, rect.width, rect.height);
-			gc.fillRect(rect2.x,rect2.y, rect2.width, rect2.height);
+			gc.fillRect(first.x,first.y, first.width, first.height);
+			gc.fillRect(secound.x,secound.y, secound.width, secound.height);
 			gc.setColor(new Color(0,0,0));
 			gc.fillRect(player.x, player.y, player.width, player.height);
+			gc.fillRect(secound.getBottom().x, secound.getBottom().y, secound.getBottom().width, secound.getBottom().height);
 			//player.moveRight();
 			player.fall();
-			player.DetectPlatform(rect);
-			player.DetectPlatform(rect2);
+
+			player.DetectPlatform(first);
+			player.DetectPlatform(secound);
+			
 
 		}
 	}
@@ -57,12 +61,14 @@ public class JavaProject {
 				player.jumpdown();
 			}
 	}
+	static int count = 0;
 	JavaProject() {
 		setup();
 		while(true) {
 			detectKeys();
 			drawGraphics();
 			gc.sleep(30);
+			count +=1;
 		}
 	}
 }
