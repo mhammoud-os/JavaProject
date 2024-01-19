@@ -3,7 +3,7 @@ package graphics;
 import java.awt.Rectangle;
 
 public class Platform extends Rectangle {
-	int sidesWidth = 10;
+	int sidesWidth = 5;
 	int heightOffset = 7;
     Platform(int x, int y, int width, int height) {
         this.x = x;
