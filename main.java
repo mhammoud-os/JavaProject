@@ -14,7 +14,8 @@ import javax.swing.Timer;
 public class main implements ActionListener{
     GraphicsConsole gc = new GraphicsConsole(1280, 720);
     Random rand = new Random();
-	Player player = new Player(10,20,20);
+	Player player = new Player(10,10,10,20,20);
+	Player player2 = new Player(1270,10,10,20,20);
 	Timer timer = new Timer(10, this);
 	double time;
 	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
@@ -96,6 +97,7 @@ public class main implements ActionListener{
 		synchronized(gc) {
 			gc.clear();
 			player.DetectPlatform(leftSide);
+			player2.DetectPlatform(mainPlatform);
 			if(player.fall) {
 				player.DetectPlatform(rightSide);
 			}
@@ -111,8 +113,14 @@ public class main implements ActionListener{
 			drawBlocks();
 			gc.setColor(new Color(100,100,100));
 			gc.fillRect(player.x, player.y, player.width, player.height);
+			gc.fillRect(player2.x, player2.y, player2.width, player2.height);
+			gc.fillRect(player2.getTop().x, player2.getTop().y, player2.getTop().width, player2.getTop().height);
+
 			//player.moveRight();
+			player.getPlayerColide(player2);
 			player.fall();
+			player2.fall();
+			
 		}
 	}
 
@@ -126,7 +134,6 @@ public class main implements ActionListener{
 			if (gc.isKeyDown(38) && !timer.isRunning() && !player.fall) {	//up
 				timer.start();
 				player.jumping = true;
-				System.out.println("HIf");
 			}
 			if (gc.isKeyDown(40)) {	//down
 				player.jumpdown();
@@ -137,14 +144,12 @@ public class main implements ActionListener{
 		if (ev.getSource() == timer) {
 			time += 0.1;
 		}
-		System.out.println(time);
 		if (time >=3) {
 			player.jumping = false;
 		};	
 		if (time >=6) {
 			time = 0;
 			timer.stop();
-
 		}
 	}
 }
