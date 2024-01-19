@@ -15,7 +15,7 @@ public class main implements ActionListener{
     GraphicsConsole gc = new GraphicsConsole(1280, 720);
     Random rand = new Random();
 	Player player = new Player(10,10,10,20,20);
-	Player player2 = new Player(1270,10,10,20,20);
+	Player player2 = new Player(1250,10,10,20,20);
 	Timer timer = new Timer(10, this);
 	double time;
 	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
@@ -146,7 +146,7 @@ public class main implements ActionListener{
 		}
 		if (time >=3) {
 			player.jumping = false;
-		};	
+		}	
 		if (time >=6) {
 			time = 0;
 			timer.stop();
