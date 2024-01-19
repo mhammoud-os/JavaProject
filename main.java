@@ -14,10 +14,12 @@ import javax.swing.Timer;
 public class main implements ActionListener{
     GraphicsConsole gc = new GraphicsConsole(1280, 720);
     Random rand = new Random();
-	Player player = new Player(10,10,10);
+	Player player = new Player(10,20,20);
 	Timer timer = new Timer(10, this);
 	double time;
-	Platform first = new Platform(0,600, 1280,50);
+	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
+	Platform leftSide = new Platform(-20, 0, 10, 720);
+	Platform rightSide = new Platform(1290, 0, 10, 720);
 
     static int[][] blocks;
 
@@ -27,10 +29,6 @@ public class main implements ActionListener{
     main() {
         setup();
 
-        //Draw grass
-        Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
-        gc.setColor(Color.GREEN);
-        gc.fillRect(mainPlatform.x, mainPlatform.y, mainPlatform.width, mainPlatform.height);
 
         while (true) {
 			detectKeys();
@@ -97,17 +95,24 @@ public class main implements ActionListener{
 	void drawGraphics() {
 		synchronized(gc) {
 			gc.clear();
-			player.DetectPlatform(first);
+			player.DetectPlatform(leftSide);
+			if(player.fall) {
+				player.DetectPlatform(rightSide);
+			}
+			if(player.fall) {
+				player.DetectPlatform(mainPlatform);
+			}
+
+			//Draw grass
+			gc.setColor(Color.GREEN);
+			gc.fillRect(mainPlatform.x, mainPlatform.y, mainPlatform.width, mainPlatform.height);
+
+
 			drawBlocks();
 			gc.setColor(new Color(100,100,100));
-			gc.fillRect(first.x,first.y, first.width, first.height);
-			gc.setColor(new Color(0,0,0));
 			gc.fillRect(player.x, player.y, player.width, player.height);
 			//player.moveRight();
 			player.fall();
-
-			
-
 		}
 	}
 
