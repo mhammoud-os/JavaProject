@@ -55,13 +55,10 @@ public class Player extends Rectangle{
 		}
 		
 		if(this.intersects(platform.getRight())) {
-			this.x=platform.getRight().x+platform.getRight().width;
+			this.x += speed;
 		}
 		if(this.intersects(platform.getLeft())) {
-			this.x=platform.getLeft().x-this.width;
-			System.out.println(platform.getLeft());
-			System.out.println("HI");
-			//System.out.println(platform.getLeft());
+			this.x -= speed;
 		}
 	}
 	
