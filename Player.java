@@ -5,18 +5,22 @@ import java.awt.Color.*;
 import java.awt.*;
 
 public class Player extends Rectangle{
-	int speed;
+	int speed, startX, startY;
 	int gravity = 10;
 	boolean fall = true; 
 	boolean jumping = false;
 	double timer;
+	int lifeCount = 3;
 
-	Player(int speed, int width, int height){
+	Player(int startX, int startY, int speed, int width, int height){
 		this.speed =speed;
 		this.width = width; 
 		this.height = height;
 		this.x = 10;
 		this.y = 10;
+		this.startX = startX;
+		this.startY = startY;
+		this.setup();
 		this.fall();
 	}
 
@@ -61,5 +65,27 @@ public class Player extends Rectangle{
 			this.x -= speed;
 		}
 	}
+	Rectangle getTop() {
+    	return new Rectangle(this.x, this.y, this.width, (int)this.height/2);
+	}
+    Rectangle getBottom() {
+    	return new Rectangle(this.x, this.y+(this.height/4)*3, this.width, (int)this.height/2);
+    }
+    void setup() {
+    	this.x = this.startX; 
+    	this.y = this.startY;
+    	this.fall = true;
+    }
+    boolean getPlayerColide(Player opponent) {
+    	if (this.getBottom().intersects(opponent.getTop())) {
+    		this.setup();
+    		opponent.setup();
+    		this.lifeCount -=1;
+    		return true;
+		}
+		return false;
+    }
+    
+
 	
 }
