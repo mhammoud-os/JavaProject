@@ -3,7 +3,6 @@ import hsa2.GraphicsConsole;
 import java.awt.Color;
 import java.util.Random;
 
-
 import java.awt.*;
 import java.util.*;
 
@@ -14,10 +13,12 @@ import javax.swing.Timer;
 public class main implements ActionListener{
     GraphicsConsole gc = new GraphicsConsole(1280, 720);
     Random rand = new Random();
-	Player player = new Player(10,10,10,20,20);
-	Player player2 = new Player(1250,10,10,20,20);
+	Player player = new Player(10,10,10,40,40);
+	Player player2 = new Player(1250,10,10,40,40);
 	Timer timer = new Timer(10, this);
+	Timer timer2 = new Timer(10, this);
 	double time;
+	double time2;
 	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
 	Platform leftSide = new Platform(-20, 0, 10, 720);
 	Platform rightSide = new Platform(1290, 0, 10, 720);
@@ -29,13 +30,12 @@ public class main implements ActionListener{
     }
     main() {
         setup();
-
-
         while (true) {
 			detectKeys();
 			drawGraphics();
 			Thread.yield();
 			player.timer = time;
+			player2.timer = time2;
 			gc.sleep(30);
         }
     }
@@ -77,7 +77,7 @@ public class main implements ActionListener{
                     int rectX = 80 + (31 * (j));
                     int rectY = 75 + (48 * (i));
                     int rectWidth = 30;
-                    int rectHeight = 30;
+                    int rectHeight = 10;
 
                     gc.setStroke(6);
                     gc.setColor(Color.BLACK);
@@ -87,17 +87,17 @@ public class main implements ActionListener{
 					if(player.fall) {
 						player.DetectPlatform(platform);
 					}
-                    
+					if(player2.fall) {
+						player2.DetectPlatform(platform);
+					}
                 }
             }
         }
     }
-
 	void drawGraphics() {
 		synchronized(gc) {
 			gc.clear();
 			player.DetectPlatform(leftSide);
-			player2.DetectPlatform(mainPlatform);
 			if(player.fall) {
 				player.DetectPlatform(rightSide);
 			}
@@ -105,10 +105,16 @@ public class main implements ActionListener{
 				player.DetectPlatform(mainPlatform);
 			}
 
+			player2.DetectPlatform(leftSide);
+			if(player2.fall) {
+				player2.DetectPlatform(rightSide);
+			}
+			if(player2.fall) {
+				player2.DetectPlatform(mainPlatform);
+			}
 			//Draw grass
 			gc.setColor(Color.GREEN);
 			gc.fillRect(mainPlatform.x, mainPlatform.y, mainPlatform.width, mainPlatform.height);
-
 
 			drawBlocks();
 			gc.setColor(new Color(100,100,100));
@@ -118,9 +124,9 @@ public class main implements ActionListener{
 
 			//player.moveRight();
 			player.getPlayerColide(player2);
+			player2.getPlayerColide(player);
 			player.fall();
 			player2.fall();
-			
 		}
 	}
 
@@ -138,9 +144,33 @@ public class main implements ActionListener{
 			if (gc.isKeyDown(40)) {	//down
 				player.jumpdown();
 			}
+
+			if (gc.isKeyDown(65)) {	//isKeyDown uses keyCodes. Left arrow
+				player2.moveLeft();
+			}
+			if (gc.isKeyDown(68)) { //right
+				player2.moveRight();
+			}
+			if (gc.isKeyDown(87) && !timer2.isRunning() && !player2.fall) {	//up
+				timer2.start();
+				player2.jumping = true;
+			}
+			if (gc.isKeyDown(83)) {	//down
+				player2.jumpdown();
+			}
 	}
 	@Override
 	public void actionPerformed(ActionEvent ev) {
+		if (ev.getSource() == timer2) {
+			time2 += 0.1;
+		}
+		if (time2 >=3) {
+			player2.jumping = false;
+		}	
+		if (time2 >=6) {
+			time2 = 0;
+			timer2.stop();
+		}
 		if (ev.getSource() == timer) {
 			time += 0.1;
 		}
