@@ -1,2 +1,2 @@
 # JavaProject
-This is a culminating java Software Development Project for ICS3U1 Intro to Computer Science
+A culminating java software development project for ICS3U1 Intro to Computer Science.

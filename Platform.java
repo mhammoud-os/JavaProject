@@ -1,5 +1,3 @@
-package graphics;
-
 import java.awt.Rectangle;
 
 public class Platform extends Rectangle {
@@ -11,7 +9,7 @@ public class Platform extends Rectangle {
         this.width = width;
         this.height = height;
     }
-    
+
     Rectangle getTop() {
     	return new Rectangle(this.x, this.y, this.width, (int)this.height/4);
     }
