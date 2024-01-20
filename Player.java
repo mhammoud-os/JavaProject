@@ -27,10 +27,21 @@ public class Player extends Rectangle{
 	void moveRight() {
 		this.x+=this.speed;
 	}
+	void moveRight(int amount) {
+		for(int i = 0; i <=amount; i++) {
+			this.moveRight();
+		}
+	}
+	void moveLeft(int amount) {
+		for(int i = 0; i <=amount; i++) {
+			this.moveLeft();
+		}
+	}
 
 	void moveLeft() {
 		this.x-=this.speed;
 	}
+
 	void fall() {
 		if(this.jumping) {
 			this.y-=gravity;
@@ -71,13 +82,14 @@ public class Player extends Rectangle{
     Rectangle getBottom() {
     	return new Rectangle(this.x, this.y+(this.height/4)*3, this.width, (int)this.height/2);
     }
+    
     void setup() {
     	this.x = this.startX; 
     	this.y = this.startY;
     	this.fall = true;
     }
     boolean getPlayerColide(Player opponent) {
-    	if (this.getBottom().intersects(opponent.getTop())) {
+    	if (this.getBottom().intersects(opponent.getTop()) && !this.jumping) {
     		this.setup();
     		opponent.setup();
     		this.lifeCount -=1;
@@ -85,7 +97,4 @@ public class Player extends Rectangle{
 		}
 		return false;
     }
-    
-
-	
 }
