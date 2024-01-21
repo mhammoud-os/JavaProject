@@ -93,7 +93,7 @@ public class Arena implements ActionListener {
 		gcIntro.setColor(blue1);
 		gcIntro.setFont(titleFont);
 		gcIntro.drawString("Welcome to LeapDuel Arena!", winX/2 - 325, winY/2 - 225);
-		logo = loadImage("leapDuelArenaLogo.png");
+		logo = loadImage("imgs/leapDuelArenaLogo.png");
 		gcIntro.drawImage(logo, winX/2 - 250, winY/2 - 150);
 		
 		//Show rules
