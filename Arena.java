@@ -13,26 +13,29 @@ import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class Arena implements ActionListener {
-	GraphicsConsole gc = new GraphicsConsole(1280, 720);
-	
-	Random rand = new Random();
-	Player player = new Player(10, 10, 10, 40, 40);
-	Player player2 = new Player(1250, 10, 10, 40, 40);
-	Timer timer = new Timer(10, this);
-	Timer timer2 = new Timer(10, this);
-	double time;
-	double time2;
-	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
-	Platform leftSide = new Platform(-20, 0, 10, 720);
-	Platform rightSide = new Platform(1290, 0, 10, 720);
-	static int[][] blocks;
-	
 	//Window size
 	public static int winX = 1280;
 	public static int winY = 720;
 		
 	//Graphics Consoles
+	GraphicsConsole gc = new GraphicsConsole(1280, 720);
 	static GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
+	
+	Random rand = new Random();
+	Player player = new Player(10, 10, 10, 40, 40);
+	Player player2 = new Player(1250, 10, 10, 40, 40);
+	
+	Timer timer = new Timer(10, this);
+	Timer timer2 = new Timer(10, this);
+	
+	double time;
+	double time2;
+	
+	//Platforms
+	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
+	Platform leftSide = new Platform(-20, 0, 10, 720);
+	Platform rightSide = new Platform(1290, 0, 10, 720);
+	static int[][] blocks;
 	
 	//Start button variables
 	static int startX = winX/2 - 100;
@@ -85,26 +88,27 @@ public class Arena implements ActionListener {
 		
 		//Fonts and colours
 		Font titleFont = new Font("Comic Sans MS", Font.PLAIN, 50);
-		Font bodyFont = new Font("Comic Sans MS", Font.PLAIN, 30);
+		Font bodyFont = new Font("Comic Sans MS", Font.PLAIN, 28);
 		Color blue1 = new Color(42, 81, 222);
 		Color green1 = new Color(21, 150, 23);
 		
 		//Welcome
 		gcIntro.setColor(blue1);
 		gcIntro.setFont(titleFont);
-		gcIntro.drawString("Welcome to LeapDuel Arena!", winX/2 - 325, winY/2 - 225);
-		logo = loadImage("imgs/leapDuelArenaLogo.png");
-		gcIntro.drawImage(logo, winX/2 - 250, winY/2 - 150);
+		gcIntro.drawString("Welcome to ", winX/2 - 325, winY/2 - 275);
+		logo = loadImage("leapDuelArenaLogo.png");
+		gcIntro.drawImage(logo, winX/2 - 25, winY/2 - 375, 400, 150);
 		
 		//Show rules
 		gcIntro.setFont(bodyFont);
-		gcIntro.drawString("Rules: ", winX/2 - 60, winY/2 - 135);
-		gcIntro.drawString("Move left, right, and jump with wasd or arrow keys.", winX/2 - 350, winY/2 - 75);
-		gcIntro.drawString("The goal of the game is to jump on the other player.", winX/2 -  350, winY/2 - 25);
-		gcIntro.drawString("You have 3 lives, and you lose one if you get jumped on.", winX/2 - 375, winY/2 + 25);
-		gcIntro.drawString("Last one standing wins!", winX/2 - 175, winY/2 + 75);
+		gcIntro.drawString("Rules: ", winX/2 - 50, winY/2 - 165);
+		gcIntro.drawString("Move left, right, and jump with wasd or arrow keys.", winX/2 - 325, winY/2 - 100);
+		gcIntro.drawString("The goal of the game is to jump on the other player.", winX/2 -  325, winY/2 - 50);
+		gcIntro.drawString("You have 3 lives, and you lose one if you get jumped on.", winX/2 - 350, winY/2);
+		gcIntro.drawString("You are competing against the computer.", winX/2 - 275, winY/2 + 50);
+		gcIntro.drawString("Last one standing wins!", winX/2 - 150, winY/2 + 100);
 		
-		gcIntro.drawString("Click the button to start the game!", winX/2 - 250, winY/2 + 175);
+		gcIntro.drawString("Click the button to start the game!", winX/2 - 225, winY/2 + 175);
 		
 		//Draw the start button
 		gcIntro.setColor(green1);
