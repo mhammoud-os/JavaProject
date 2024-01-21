@@ -1,7 +1,6 @@
 import hsa2.GraphicsConsole;
 import java.awt.*;
 import java.util.*;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
@@ -19,6 +18,7 @@ public class Main implements ActionListener {
 	Platform leftSide = new Platform(-20, 0, 10, 720);
 	Platform rightSide = new Platform(1290, 0, 10, 720);
 	static int[][] blocks;
+	boolean AutomaticGame = true;
 
 	public static void main(String[] args) {
 		new Main();
@@ -119,7 +119,40 @@ public class Main implements ActionListener {
 		}
 	}
 
+	void updatePlayer2Position() {
+		int distanceX = player.x - player2.x;
+		int distanceY = player.y - player2.y;
+		int moveSpeed = 2;
+		int constantMoveSpeed = 1;
+
+		if (Math.abs(distanceX) > Math.abs(distanceY)) {
+			if (distanceX > 0) {
+				player2.moveRight(moveSpeed);
+			} else {
+				player2.moveLeft(moveSpeed);
+			}
+		} else {
+			if (distanceY > 0) {
+				player2.fall = true;
+			} else {
+				if (!player2.jumping && player.y - player2.y > 30 && Math.abs(distanceX) > 10) {
+					player2.jumping = true;
+					player2.gravity = -15;
+				}
+			}
+		}
+
+		if (!player2.jumping) {
+			if (distanceX > 50) {
+				player2.moveRight(constantMoveSpeed);
+			} else if (distanceX < -50) {
+				player2.moveLeft(constantMoveSpeed);
+			}
+		}
+	}
+
 	void detectKeys() {
+		if (AutomaticGame){ updatePlayer2Position(); }
 		if (gc.isKeyDown(37)) player.moveLeft();
 		if (gc.isKeyDown(39)) player.moveRight();
 		if (gc.isKeyDown(38) && !timer.isRunning() && !player.fall) {
