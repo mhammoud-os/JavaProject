@@ -9,7 +9,7 @@ public class Main implements ActionListener {
 	GraphicsConsole gc = new GraphicsConsole(1280, 720);
 	Random rand = new Random();
 	Player player = new Player(10, 10, 10, 40, 40);
-	Player player2 = new Player(1250, 10, 10, 40, 40);
+	Player player2 = new Player(1250, 10, 4, 40, 40);
 	Timer timer = new Timer(10, this);
 	Timer timer2 = new Timer(10, this);
 	double time;
@@ -163,7 +163,7 @@ public class Main implements ActionListener {
 
 		if (gc.isKeyDown(65)) player2.moveLeft();
 		if (gc.isKeyDown(68)) player2.moveRight();
-		if (gc.isKeyDown(87) && !timer2.isRunning() && !player2.fall) {
+		if (!timer2.isRunning() && !player2.fall) {
 			timer2.start();
 			player2.jumping = true;
 		}
