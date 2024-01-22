@@ -1,34 +1,32 @@
 import hsa2.GraphicsConsole;
 import java.awt.*;
 import java.util.*;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
-import javax.swing.Timer;
+import javax.swing.*;
 
 public class Main implements ActionListener {
 	GraphicsConsole gc = new GraphicsConsole(1280, 720);
 	Random rand = new Random();
 	Player player = new Player(10, 10, 10, 40, 40);
 	Player player2 = new Player(1250, 10, 4, 40, 40);
-	Timer timer = new Timer(10, this);
-	Timer timer2 = new Timer(10, this);
-	double time;
-	double time2;
+	javax.swing.Timer timer = new javax.swing.Timer(10, this);
+	javax.swing.Timer timer2 = new javax.swing.Timer(10, this);
+
+	double time, time2;
 	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
 	Platform leftSide = new Platform(-20, 0, 10, 720);
 	Platform rightSide = new Platform(1290, 0, 10, 720);
 	static int[][] blocks;
 	boolean AutomaticGame = true;
-	static BufferedImage BackgroundImg = null;
-	static BufferedImage BlockImg = null;
-	static BufferedImage PlatformImg = null;
+	static BufferedImage BackgroundImg, BlockImg, PlatformImg;
+	static BufferedImage[] pImages = new BufferedImage[12];
+	static BufferedImage[] bImages = new BufferedImage[12];
+	int currentFrame = 0;
+
 	public static void main(String[] args) {
 		new Main();
 	}
@@ -51,6 +49,12 @@ public class Main implements ActionListener {
 		BackgroundImg = loadImage("src/imgs/leapDuelArenaBG.png");
 		BlockImg = loadImage("src/imgs/blockImage.png");
 		PlatformImg = loadImage("src/imgs/groundPlatformImg.png");
+
+		for (int i = 0; i < 12; i++) {
+			pImages[i] = loadImage("src/imgs/player/0_Minotaur_Running_0" + String.format("%02d", i) + ".png");
+			bImages[i] = loadImage("src/imgs/player2/0_Reaper_Man_Run Slashing_0" + String.format("%02d", i) + ".png");
+		}
+
 		gc.setLocationRelativeTo(null);
 		gc.clear();
 		gc.enableMouse();
@@ -124,8 +128,16 @@ public class Main implements ActionListener {
 
 			drawBlocks();
 
-			gc.setColor(new Color(100, 100, 100));
+			gc.setColor(new Color(100, 100, 100, 0));
 			gc.fillRect(player.x, player.y, player.width, player.height);
+
+			gc.drawImage(pImages[currentFrame], player.x - 40, player.y - 55, player.width + 80, player.height + 80);
+
+			gc.drawImage(bImages[currentFrame], player2.x - 40, player2.y - 55, player2.width + 80, player2.height + 80);
+
+			currentFrame = (currentFrame + 1) % 12;
+
+			gc.setColor(new Color(100, 100, 100, 0));
 			gc.fillRect(player2.x, player2.y, player2.width, player2.height);
 			gc.fillRect(player2.getTop().x, player2.getTop().y, player2.getTop().width, player2.getTop().height);
 
@@ -134,8 +146,6 @@ public class Main implements ActionListener {
 			player.fall();
 			player2.fall();
 		}
-
-
 	}
 
 	void updatePlayer2Position() {
@@ -171,7 +181,9 @@ public class Main implements ActionListener {
 	}
 
 	void detectKeys() {
-		if (AutomaticGame){ updatePlayer2Position(); }
+		if (AutomaticGame) {
+			updatePlayer2Position();
+		}
 		if (gc.isKeyDown(37)) player.moveLeft();
 		if (gc.isKeyDown(39)) player.moveRight();
 		if (gc.isKeyDown(38) && !timer.isRunning() && !player.fall) {
@@ -194,20 +206,23 @@ public class Main implements ActionListener {
 		if (ev.getSource() == timer2) {
 			time2 += 0.1;
 		}
+		if (ev.getSource() == timer) {
+			time += 0.1;
+		}
+
 		if (time2 >= 3) player2.jumping = false;
 		if (time2 >= 6) {
 			time2 = 0;
 			timer2.stop();
 		}
-		if (ev.getSource() == timer) {
-			time += 0.1;
-		}
+
 		if (time >= 3) player.jumping = false;
 		if (time >= 6) {
 			time = 0;
 			timer.stop();
 		}
 	}
+
 
 	static BufferedImage loadImage(String fileName) {
 		BufferedImage img = null;
@@ -219,5 +234,4 @@ public class Main implements ActionListener {
 		}
 		return img;
 	}
-
 }
