@@ -403,6 +403,7 @@ public class Arena implements ActionListener {
 
 					gc.setStroke(6);
 					gc.setColor(Color.BLACK);
+					gc.drawRect(rectX, rectY, rectWidth + 30, rectHeight);
 					gc.drawImage(BlockImg, rectX, rectY, rectWidth + 30, rectHeight);
 					Platform platform = new Platform(rectX, rectY, rectWidth + 30, rectHeight);
 					if (player.fall) {
