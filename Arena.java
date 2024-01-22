@@ -98,7 +98,6 @@ public class Arena implements ActionListener {
 			rulesClicked = false;
 			pvpClicked = false;
 			//toIntro = false;
-			
 			gcIntro.sleep(8);
 			
 		}

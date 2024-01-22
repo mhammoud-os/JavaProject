@@ -28,6 +28,7 @@ public class Main implements ActionListener {
 	boolean AutomaticGame = true;
 	static BufferedImage BackgroundImg = null;
 	static BufferedImage BlockImg = null;
+	static BufferedImage PlatformImg = null;
 	public static void main(String[] args) {
 		new Main();
 	}
@@ -49,6 +50,7 @@ public class Main implements ActionListener {
 		gc.setAntiAlias(true);
 		BackgroundImg = loadImage("src/imgs/leapDuelArenaBG.png");
 		BlockImg = loadImage("src/imgs/blockImage.png");
+		PlatformImg = loadImage("src/imgs/groundPlatformImg.png");
 		gc.setLocationRelativeTo(null);
 		gc.clear();
 		gc.enableMouse();
@@ -67,6 +69,7 @@ public class Main implements ActionListener {
 	}
 
 	void drawBlocks() {
+		gc.drawImage(PlatformImg, 0, 590, 1280, 210);
 		for (int i = 0; i < blocks.length; i++) {
 			for (int j = 0; j < blocks[0].length; j++) {
 				if (blocks[i][j] == 1) {
