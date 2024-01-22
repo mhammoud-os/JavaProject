@@ -165,7 +165,7 @@ public class Arena implements ActionListener {
 			gcIntro.setColor(blue1);
 			gcIntro.setFont(titleFont);
 			//gcIntro.drawString("Welcome to ", winX/2 - 325, winY/2 - 275);
-			logo = loadImage("leapDuelArenaLogo.png");
+			logo = loadImage("src/imgs/leapDuelArenaLogo.png");
 			//gcIntro.drawImage(logo, winX/2 - 25, winY/2 - 375, 400, 150);
 			gcIntro.drawImage(logo, winX/2 - 275, winY/2 - 350, 550, 200);
 					
