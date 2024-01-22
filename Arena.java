@@ -1,3 +1,4 @@
+package graphics;
 import hsa2.GraphicsConsole;
 import java.awt.*;
 import java.util.*;
@@ -10,7 +11,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.Timer;
+import javax.sound.sampled.*;
 
 public class Arena implements ActionListener {
 	//Window size
@@ -30,6 +33,13 @@ public class Arena implements ActionListener {
 	Timer timer = new Timer(10, this);
 	Timer timer2 = new Timer(10, this);
 	
+	static BufferedImage BackgroundImg, BlockImg, PlatformImg;
+	static BufferedImage[] pImagesRight = new BufferedImage[12];
+	static BufferedImage[] pImagesLeft = new BufferedImage[12];
+	static BufferedImage[] bImagesRight = new BufferedImage[12];
+	static BufferedImage[] bImagesLeft = new BufferedImage[12];
+	static BufferedImage HeartImg;
+	int currentFrame = 0;
 	double time;
 	double time2;
 	
@@ -69,6 +79,9 @@ public class Arena implements ActionListener {
 	static boolean rulesClicked = false;
 	static boolean pvpClicked = false;
 	static boolean Ai = false;
+
+	private Clip backgroundMusic;
+	private Clip jumpSound;
 	//static boolean toIntro = false;
 
 	public static void main(String[] args) {
@@ -79,6 +92,9 @@ public class Arena implements ActionListener {
 		//Intro screen
 		setupIntro();
 		setupRules();
+		loadAudio();
+		playBackgroundMusic();
+
 		
 		while (!checkStart()) {
 			drawIntro();
@@ -98,22 +114,31 @@ public class Arena implements ActionListener {
 			rulesClicked = false;
 			pvpClicked = false;
 			//toIntro = false;
-			gcIntro.sleep(8);
-			
+			gcIntro.sleep(30);
 		}
-		
-		
 		switchScreen(gc);
-		
 		setup();
-		while (true) {
+		boolean running = true;
+		while (running) {
 			detectKeys();
 			drawGraphics();
 			Thread.yield();
+			if(player.lifeCount ==0 || player2.lifeCount == 0) {
+				break;
+			}
+
 			player.timer = time;
 			player2.timer = time2;
 			gc.sleep(30);
 		}
+			
+			gc.clear();
+			detectKeys();
+			drawGraphics();
+
+			gc.sleep(1000);
+			gc.dispose();
+			System. exit(0);
 	}
 	
 	void setupIntro() {
@@ -136,8 +161,6 @@ public class Arena implements ActionListener {
 	}
 	
 	void drawIntro() {
-		synchronized(gcIntro){
-			gcIntro.clear();
 			//Welcome
 			gcIntro.setColor(blue1);
 			gcIntro.setFont(titleFont);
@@ -155,7 +178,6 @@ public class Arena implements ActionListener {
 					
 			gcIntro.setColor(blue1);
 			gcIntro.drawString("START!", startX + 60, startY + 50);
-		}
 	}
 	
 	void setupRules() {	
@@ -174,7 +196,7 @@ public class Arena implements ActionListener {
 	}
 	
 	void drawRules() {
-		synchronized(gcRules) {
+			gc.clear();
 			gcRules.setColor(blue1);
 			gcRules.setFont(titleFont);
 			gcRules.drawString("Rules: ", winX/2 - 60, 150);
@@ -192,7 +214,6 @@ public class Arena implements ActionListener {
 			gcRules.drawRect(winX/2 - 90, winY - 180, 180, 75);
 			gcRules.setColor(Color.WHITE);
 			gcRules.drawString("Back", winX/2 - 45, winY - 135);
-		}
 	}
 	
 	/**
@@ -213,7 +234,6 @@ public class Arena implements ActionListener {
 				rulesClicked = true;
 			}
 		}
-		
 		return false;
 	}
 
@@ -246,29 +266,12 @@ public class Arena implements ActionListener {
 		gc.setBackgroundColor(Color.BLUE);
 	}
 	
-	/**
-	 * 
-	 * @param fileName	name of the file
-	 * @return the image
-	 */
-	static BufferedImage loadImage(String fileName) {
-		  BufferedImage img = null;
-		  try {
-		    img = ImageIO.read(new File(fileName).getAbsoluteFile());
-		  } catch (IOException e) {
-		    e.printStackTrace();
-		    JOptionPane.showMessageDialog(null, "An image failed to load", "ERROR", JOptionPane.ERROR_MESSAGE);
-		  }
-		  return img;
-		}
-	
 	void showLevel() {
 		levelB = new Level(levelNum);
 		
 		//gcIntro.setColor(Color.BLUE);
 		//gcIntro.drawString("Level:", 75, 50);
 		
-		synchronized(gcIntro) {
 			gcIntro.setColor(levelB.levelBg);
 			gcIntro.fillRect(winX/2 - 90, winY/2 + 50, 180, 75);
 			gcIntro.setColor(Color.BLACK);
@@ -276,31 +279,24 @@ public class Arena implements ActionListener {
 			
 			gcIntro.setColor(Color.WHITE);
 			gcIntro.drawString(levelB.levelName, winX/2 - 50, winY/2 + 100);
-			
-		}
 	}
 	
 	void drawRuleButton() {
-		synchronized(gcIntro) {
 			gcIntro.setColor(Color.GRAY);
 			gcIntro.fillOval(winX - 100, winY - 100, 60, 60);
 			gcIntro.setFont(bodyFont);
 			gcIntro.setColor(Color.WHITE);
 			gcIntro.drawString("?", winX - 75, winY - 60);
-		}
 	}
 	
 	void checkRules() {
 		if (rulesClicked) {
-			synchronized(gcIntro) {
 				switchScreen(gcRules);
 				drawRules();
-			}
 		}
 	}
 	
 	void checkPvp() {
-		synchronized(gcIntro) {
 			if (Ai) {
 				gcIntro.setColor(blue1.brighter());
 				gcIntro.fillRect(winX/2 - 110, winY/2 + 160, 220, 75);
@@ -316,18 +312,63 @@ public class Arena implements ActionListener {
 				gcIntro.setColor(Color.WHITE);
 				gcIntro.drawString("Player vs Player", winX/2 - 100, winY/2 + 210);
 			}
-						
-		}
 	}
-
+	
 	void setup() {
 		createBlocks();
 		gc.setAntiAlias(true);
-		gc.setBackgroundColor(Color.WHITE);
-		gc.setLocationRelativeTo(null);
+		BackgroundImg = loadImage("src/imgs/leapDuelArenaBG.png");
+		BlockImg = loadImage("src/imgs/blockImage.png");
+		PlatformImg = loadImage("src/imgs/groundPlatformImg.png");
+		HeartImg = loadImage("src/imgs/heart.png");
 		gc.clear();
 		gc.enableMouse();
 		gc.enableMouseMotion();
+		player.speed = (levelNum+1)*6;
+		player2.speed = (levelNum+1)*6;
+
+		for (int i = 0; i < 12; i++) {
+			pImagesLeft[i] = loadImage("src/imgs/imgs.player.right/0_Minotaur_Running_0" + String.format("%02d", i) + ".png");
+			bImagesRight[i] = loadImage("src/imgs/imgs.player2.right/0_Reaper_Man_Run Slashing_0" + String.format("%02d", i) + ".png");
+			pImagesRight[i] = loadImage("src/imgs/imgs.player.left/0_Minotaur_Running_0" + String.format("%02d", i) + ".png");
+			bImagesLeft[i] = loadImage("src/imgs/imgs.player2.left/0_Reaper_Man_Run Slashing_0" + String.format("%02d", i) + ".png");
+			/*
+			pImagesLeft[i] = loadImage("src/imgs/player/right/0_Minotaur_Running_0" + String.format("%02d", i) + ".png");
+			bImagesRight[i] = loadImage("src/imgs/player2/right/0_Reaper_Man_Run Slashing_0" + String.format("%02d", i) + ".png");
+			pImagesRight[i] = loadImage("src/imgs/player/left/0_Minotaur_Running_0" + String.format("%02d", i) + ".png");
+			bImagesLeft[i] = loadImage("src/imgs/player2/left/0_Reaper_Man_Run Slashing_0" + String.format("%02d", i) + ".png");
+			*/
+		}
+	}
+	void loadAudio() {
+		try {
+			// Load background music
+			AudioInputStream bgMusicStream = AudioSystem.getAudioInputStream(new File("src/sounds/BGMusic.wav"));
+			backgroundMusic = AudioSystem.getClip();
+			backgroundMusic.open(bgMusicStream);
+
+			// Load jump sound effect
+			AudioInputStream jumpSoundStream = AudioSystem.getAudioInputStream(new File("src/sounds/jump.wav"));
+			jumpSound = AudioSystem.getClip();
+			jumpSound.open(jumpSoundStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Failed to load audio files", "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	void playBackgroundMusic() {
+		if (backgroundMusic != null) {
+			backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+	}
+
+	void playJumpSound() {
+		if (jumpSound != null) {
+			jumpSound.stop(); // Stop any existing instances
+			jumpSound.setFramePosition(0); // Rewind to the beginning
+			jumpSound.start();
+		}
 	}
 
 	void createBlocks() {
@@ -340,8 +381,16 @@ public class Arena implements ActionListener {
 			}
 		}
 	}
-
 	void drawBlocks() {
+
+		gc.drawImage(PlatformImg, 0, 590, 1280, 210);
+		for (int i = 0; i!=player.lifeCount; i++) {
+			gc.drawImage(HeartImg, 50 + (i*50), 650, 50, 50);
+		}
+
+		for (int i = 0; i!=player2.lifeCount; i++) {
+			gc.drawImage(HeartImg, 1230 - (50 + (i*50)), 650, 50, 50);
+		}
 		for (int i = 0; i < blocks.length; i++) {
 			for (int j = 0; j < blocks[0].length; j++) {
 				if (blocks[i][j] == 1) {
@@ -354,8 +403,7 @@ public class Arena implements ActionListener {
 
 					gc.setStroke(6);
 					gc.setColor(Color.BLACK);
-					gc.fillRect(rectX, rectY, rectWidth + 30, rectHeight);
-					gc.drawRect(rectX, rectY, rectWidth + 30, rectHeight);
+					gc.drawImage(BlockImg, rectX, rectY, rectWidth + 30, rectHeight);
 					Platform platform = new Platform(rectX, rectY, rectWidth + 30, rectHeight);
 					if (player.fall) {
 						player.DetectPlatform(platform);
@@ -363,14 +411,15 @@ public class Arena implements ActionListener {
 					if (player2.fall) {
 						player2.DetectPlatform(platform);
 					}
+
 				}
 			}
 		}
 	}
-
 	void drawGraphics() {
 		synchronized (gc) {
 			gc.clear();
+			gc.drawImage(BackgroundImg, 0, 0, 1280, 720);
 			player.DetectPlatform(leftSide);
 			if (player.fall) {
 				player.DetectPlatform(rightSide);
@@ -387,14 +436,25 @@ public class Arena implements ActionListener {
 				player2.DetectPlatform(mainPlatform);
 			}
 
-			gc.setColor(Color.GREEN);
-			gc.fillRect(mainPlatform.x, mainPlatform.y, mainPlatform.width, mainPlatform.height);
-
 			drawBlocks();
-			gc.setColor(new Color(100, 100, 100));
-			gc.fillRect(player.x, player.y, player.width, player.height);
-			gc.fillRect(player2.x, player2.y, player2.width, player2.height);
-			gc.fillRect(player2.getTop().x, player2.getTop().y, player2.getTop().width, player2.getTop().height);
+			if (player.movingRight)
+				gc.drawImage(pImagesRight[currentFrame], player.x - 40, player.y - 55, player.width + 80, player.height + 80);
+			else
+				gc.drawImage(pImagesLeft[currentFrame], player.x - 40, player.y - 55, player.width + 80, player.height + 80);
+
+			if (Ai) {
+				if (player2.x > player.x)
+					gc.drawImage(bImagesLeft[currentFrame], player2.x - 40, player2.y - 55, player2.width + 80, player2.height + 80);
+				else
+					gc.drawImage(bImagesRight[currentFrame], player2.x - 40, player2.y - 55, player2.width + 80, player2.height + 80);
+			}else {
+				if (player2.movingRight)
+					gc.drawImage(bImagesRight[currentFrame], player2.x - 40, player2.y - 55, player2.width + 80, player2.height + 80);
+				else gc.drawImage(bImagesLeft[currentFrame], player2.x - 40, player2.y - 55, player2.width + 80, player2.height + 80);
+				
+			}
+
+			currentFrame = (currentFrame + 1) % 12;
 
 			player.getPlayerColide(player2);
 			player2.getPlayerColide(player);
@@ -402,42 +462,103 @@ public class Arena implements ActionListener {
 			player2.fall();
 		}
 	}
+	
+	void updatePlayer2Position() {
+		int distanceX = player.x - player2.x;
+		int distanceY = player.y - player2.y;
 
+		if (Math.abs(distanceX) > Math.abs(distanceY)) {
+			if (distanceX > 0)
+				player2.moveRight();
+			else
+				player2.moveLeft();
+		} else {
+			if (distanceY > 0)
+				player2.fall = true;
+			else if (!player2.jumping && player.y - player2.y > 30 && Math.abs(distanceX) > 10) {
+				player2.jumping = true;
+				player2.gravity = -15;
+			}
+		}
+
+		if (!player2.jumping) {
+			if (distanceX > 50)
+				player2.moveRight();
+			else if (distanceX < -50)
+				player2.moveLeft();
+		}
+	}
+	
+	
 	void detectKeys() {
-		if (gc.isKeyDown(37)) player.moveLeft();
-		if (gc.isKeyDown(39)) player.moveRight();
+		if (Ai) { 
+			updatePlayer2Position();
+			if (!timer2.isRunning() && !player2.fall) {
+				playJumpSound();
+				timer2.start();
+				player2.jumping = true;
+			}
+		}else {
+			if (gc.isKeyDown(65))
+				player2.moveLeft();
+			if (gc.isKeyDown(68))
+				player2.moveRight();
+			if (gc.isKeyDown(87) && !timer2.isRunning() && !player2.fall) {
+				playJumpSound();
+				timer2.start();
+				player2.jumping = true;
+			}
+			if (gc.isKeyDown(83))
+				player2.jumpdown();
+		}
+		if (gc.isKeyDown(37)) {
+			player.moveLeft();
+		}
+		if (gc.isKeyDown(39)) {
+			player.moveRight();
+		}
 		if (gc.isKeyDown(38) && !timer.isRunning() && !player.fall) {
+			playJumpSound();
 			timer.start();
 			player.jumping = true;
 		}
 		if (gc.isKeyDown(40)) player.jumpdown();
-
-		if (gc.isKeyDown(65)) player2.moveLeft();
-		if (gc.isKeyDown(68)) player2.moveRight();
-		if (gc.isKeyDown(87) && !timer2.isRunning() && !player2.fall) {
-			timer2.start();
-			player2.jumping = true;
-		}
-		if (gc.isKeyDown(83)) player2.jumpdown();
 	}
-
+	
+	
 	@Override
 	public void actionPerformed(ActionEvent ev) {
 		if (ev.getSource() == timer2) {
 			time2 += 0.1;
 		}
-		if (time2 >= 3) player2.jumping = false;
-		if (time2 >= 6) {
+		if (time2 >= 3) {
+			player2.jumping = false;
 			time2 = 0;
 			timer2.stop();
 		}
 		if (ev.getSource() == timer) {
 			time += 0.1;
 		}
-		if (time >= 3) player.jumping = false;
-		if (time >= 6) {
+		if (time >= 3) {
+			player.jumping = false;
 			time = 0;
 			timer.stop();
 		}
 	}
+	
+	/**
+	 * 
+	 * @param fileName	name of the file
+	 * @return the image
+	 */
+	static BufferedImage loadImage(String fileName) {
+		  BufferedImage img = null;
+		  try {
+		    img = ImageIO.read(new File(fileName).getAbsoluteFile());
+		  } catch (IOException e) {
+		    e.printStackTrace();
+		    JOptionPane.showMessageDialog(null, "An image failed to load", "ERROR", JOptionPane.ERROR_MESSAGE);
+		  }
+		  return img;
+		}
 }
