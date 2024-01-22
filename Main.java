@@ -27,6 +27,7 @@ public class Main implements ActionListener {
 	static BufferedImage[] pImagesLeft = new BufferedImage[12];
 	static BufferedImage[] bImagesRight = new BufferedImage[12];
 	static BufferedImage[] bImagesLeft = new BufferedImage[12];
+	static BufferedImage HeartImg;
 	int currentFrame = 0;
 	boolean PlayerMoveRight = true;
 
@@ -52,6 +53,7 @@ public class Main implements ActionListener {
 		BackgroundImg = loadImage("src/imgs/leapDuelArenaBG.png");
 		BlockImg = loadImage("src/imgs/blockImage.png");
 		PlatformImg = loadImage("src/imgs/groundPlatformImg.png");
+		HeartImg = loadImage("src/imgs/heart.png");
 
 		for (int i = 0; i < 12; i++) {
 			pImagesLeft[i] = loadImage("src/imgs/player/right/0_Minotaur_Running_0" + String.format("%02d", i) + ".png");
@@ -79,6 +81,14 @@ public class Main implements ActionListener {
 
 	void drawBlocks() {
 		gc.drawImage(PlatformImg, 0, 590, 1280, 210);
+		for (int i = 0; i!=player.lifeCount; i++) {
+			gc.drawImage(HeartImg, 50 + (i*50), 650, 50, 50);
+		}
+
+		for (int i = 0; i!=player2.lifeCount; i++) {
+			gc.drawImage(HeartImg, 1230 - (50 + (i*50)), 650, 50, 50);
+		}
+
 		for (int i = 0; i < blocks.length; i++) {
 			for (int j = 0; j < blocks[0].length; j++) {
 				if (blocks[i][j] == 1) {
