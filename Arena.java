@@ -16,49 +16,49 @@ public class Arena implements ActionListener {
 	//Window size
 	public static int winX = 1280;
 	public static int winY = 720;
-		
+
 	//Graphics Consoles
 	GraphicsConsole gc = new GraphicsConsole(winX, winY);
 	static GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
 	GraphicsConsole gcRules = new GraphicsConsole(winX, winY, "Rules");
-	
+
 	Random rand = new Random();
 	Player player = new Player(10, 10, 10, 40, 40);
 	Player player2 = new Player(1250, 10, 10, 40, 40);
-	
+
 	Timer timer = new Timer(10, this);
 	Timer timer2 = new Timer(10, this);
-	
+
 	double time;
 	double time2;
-	
+
 	//Platforms
 	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
 	Platform leftSide = new Platform(-20, 0, 10, 720);
 	Platform rightSide = new Platform(1290, 0, 10, 720);
 	static int[][] blocks;
-	
+
 	//Fonts and colours
 	Font titleFont = new Font("Comic Sans MS", Font.PLAIN, 50);
 	Font bodyFont = new Font("Comic Sans MS", Font.PLAIN, 28);
 	Color blue1 = new Color(42, 81, 222);
 	Color green1 = new Color(21, 150, 23);
-	
+
 	//Start button variables
 	static int startX = winX/2 - 90;
 	static int startY = winY/2 - 100;
 	static int startW = 180;
 	static int startH = 75;
-		
+
 	static Rectangle startButton = new Rectangle(startX, startY, startW, startH);
 	static Rectangle levelButton = new Rectangle(winX/2 - 90, winY/2, 180, 75);
-	
+
 	static int levelNum = 0;
-		
+
 	static int mouseX, mouseY;
-	
+
 	static BufferedImage logo;
-	
+
 	static Level levelB = new Level(levelNum);
 	static boolean levelClicked = false;
 
@@ -67,24 +67,24 @@ public class Arena implements ActionListener {
 	}
 
 	Arena() {
-		
+
 		setupIntro();
-		
+
 		while (!checkStart()) {
-				drawIntro();
-				showLevel();
-			
-			
+			drawIntro();
+			showLevel();
+
+
 			//if (checkLevel()) levelNum ++;
 			if (levelClicked) levelNum ++;
 			levelClicked = false;
-			
+
 			gcIntro.sleep(10);
-			
+
 		}
-		
+
 		switchScreen(gc);
-		
+
 		setup();
 		while (true) {
 			detectKeys();
@@ -95,26 +95,26 @@ public class Arena implements ActionListener {
 			gc.sleep(30);
 		}
 	}
-	
+
 	void setupIntro() {
 		//Set the visible screens
 		gcIntro.setVisible(true);
 		gc.setVisible(false);
 		gcRules.setVisible(false);
-		
+
 		//Set up other stuff
 		gcIntro.setAntiAlias(true);
 		gcIntro.setLocationRelativeTo(null);
 		//gcIntro.setBackgroundColor(new Color(222, 213, 42));
 		gcIntro.setBackgroundColor(new Color(108, 219, 230));
 		gcIntro.clear();
-		
+
 		//Enable the mouse functions
 		gcIntro.enableMouse();
 		gcIntro.enableMouseMotion();
 		gcIntro.getMouseClick();
 	}
-	
+
 	void drawIntro() {
 		synchronized(gcIntro){
 			gcIntro.clear();
@@ -122,47 +122,47 @@ public class Arena implements ActionListener {
 			gcIntro.setColor(blue1);
 			gcIntro.setFont(titleFont);
 			//gcIntro.drawString("Welcome to ", winX/2 - 325, winY/2 - 275);
-			logo = loadImage("leapDuelArenaLogo.png");
+			logo = loadImage("src/imgs/leapDuelArenaLogo.png");
 			//gcIntro.drawImage(logo, winX/2 - 25, winY/2 - 375, 400, 150);
 			gcIntro.drawImage(logo, winX/2 - 275, winY/2 - 350, 550, 200);
-					
+
 			//Draw the start button
 			gcIntro.setFont(bodyFont);
 			gcIntro.setColor(green1);
 			gcIntro.fillRect(startX, startY, startW, startH);
 			gcIntro.setColor(Color.BLACK);
 			gcIntro.drawRect(startX, startY, startW, startH);
-					
+
 			gcIntro.setColor(blue1);
 			gcIntro.drawString("START!", startX + 30, startY + 50);
 		}
 	}
-	
+
 	void setupRules() {
 		//Set the visible screens
 		gcIntro.setVisible(false);
 		gc.setVisible(false);
 		gcRules.setVisible(true);
-				
+
 		//Set up other stuff
 		gcRules.setAntiAlias(true);
 		gcRules.setLocationRelativeTo(null);
-		
+
 		//gcIntro.setBackgroundColor(new Color(222, 213, 42));
 		gcRules.setBackgroundColor(new Color(108, 219, 230));
 		gcRules.clear();
-				
+
 		//Enable the mouse functions
 		gcRules.enableMouse();
 		gcRules.enableMouseMotion();
 		gcRules.getMouseClick();
 	}
-	
+
 	void drawRules() {
 		synchronized(gcIntro) {
 			gcIntro.setColor(blue1);
 			gcIntro.setFont(titleFont);
-			
+
 			gcIntro.setFont(bodyFont);
 			gcIntro.drawString("Rules: ", winX/2 - 50, winY/2 - 165);
 			gcIntro.drawString("Move left, right, and jump with wasd or arrow keys.", winX/2 - 325, winY/2 - 100);
@@ -172,14 +172,14 @@ public class Arena implements ActionListener {
 			gcIntro.drawString("Last one standing wins!", winX/2 - 150, winY/2 + 100);
 		}
 	}
-	
+
 	/**
 	 * Check if the start button has been clicked
 	 */
 	static boolean checkStart() {
 		mouseX = gcIntro.getMouseX();
 		mouseY = gcIntro.getMouseY();
-		
+
 		if (gcIntro.getMouseClick() != 0) {
 			if (startButton.contains(mouseX, mouseY)) {
 				return true;
@@ -188,9 +188,9 @@ public class Arena implements ActionListener {
 				return false;
 			} else return false;
 		} else return false;
-		
+
 	}
-	
+
 	/**
 	 * Switches to the main graphics console
 	 */
@@ -200,45 +200,45 @@ public class Arena implements ActionListener {
 		gc.setVisible(false);
 		gcRules.setVisible(false);
 		g.setVisible(true);
-		
+
 		gcIntro.clear();
 		gc.clear();
-		
+
 		gc.setLocationRelativeTo(null);
 		gc.setBackgroundColor(Color.BLUE);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param fileName	name of the file
 	 * @return the image
 	 */
 	static BufferedImage loadImage(String fileName) {
-		  BufferedImage img = null;
-		  try {
-		    img = ImageIO.read(new File(fileName).getAbsoluteFile());
-		  } catch (IOException e) {
-		    e.printStackTrace();
-		    JOptionPane.showMessageDialog(null, "An image failed to load", "ERROR", JOptionPane.ERROR_MESSAGE);
-		  }
-		  return img;
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(fileName).getAbsoluteFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An image failed to load", "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
-	
+		return img;
+	}
+
 	void showLevel() {
 		levelB = new Level(levelNum);
-		
+
 		//gcIntro.setColor(Color.BLUE);
 		//gcIntro.drawString("Level:", 75, 50);
-		
+
 		synchronized(gcIntro) {
 			gcIntro.setColor(levelB.levelBg);
 			gcIntro.fillRect(winX/2 - 90, winY/2, 180, 75);
 			gcIntro.setColor(Color.BLACK);
 			gcIntro.drawRect(winX/2 - 90, winY/2, 180, 75);
-			
+
 			gcIntro.setColor(Color.WHITE);
 			gcIntro.drawString(levelB.levelName, winX/2 - 50, winY/2 + 50);
-			
+
 		}
 	}
 

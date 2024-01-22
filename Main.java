@@ -1,8 +1,15 @@
 import hsa2.GraphicsConsole;
 import java.awt.*;
 import java.util.*;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 
 public class Main implements ActionListener {
@@ -19,7 +26,8 @@ public class Main implements ActionListener {
 	Platform rightSide = new Platform(1290, 0, 10, 720);
 	static int[][] blocks;
 	boolean AutomaticGame = true;
-
+	static BufferedImage BackgroundImg = null;
+	static BufferedImage BlockImg = null;
 	public static void main(String[] args) {
 		new Main();
 	}
@@ -39,7 +47,8 @@ public class Main implements ActionListener {
 	void setup() {
 		createBlocks();
 		gc.setAntiAlias(true);
-		gc.setBackgroundColor(Color.WHITE);
+		BackgroundImg = loadImage("src/imgs/leapDuelArenaBG.png");
+		BlockImg = loadImage("src/imgs/blockImage.png");
 		gc.setLocationRelativeTo(null);
 		gc.clear();
 		gc.enableMouse();
@@ -70,8 +79,10 @@ public class Main implements ActionListener {
 
 					gc.setStroke(6);
 					gc.setColor(Color.BLACK);
+
 					gc.fillRect(rectX, rectY, rectWidth + 30, rectHeight);
 					gc.drawRect(rectX, rectY, rectWidth + 30, rectHeight);
+					gc.drawImage(BlockImg, rectX, rectY, rectWidth + 30, rectHeight);
 					Platform platform = new Platform(rectX, rectY, rectWidth + 30, rectHeight);
 					if (player.fall) {
 						player.DetectPlatform(platform);
@@ -87,6 +98,8 @@ public class Main implements ActionListener {
 	void drawGraphics() {
 		synchronized (gc) {
 			gc.clear();
+			gc.drawImage(BackgroundImg, 0, 0, 1280, 720);
+
 			player.DetectPlatform(leftSide);
 			if (player.fall) {
 				player.DetectPlatform(rightSide);
@@ -107,6 +120,7 @@ public class Main implements ActionListener {
 			gc.fillRect(mainPlatform.x, mainPlatform.y, mainPlatform.width, mainPlatform.height);
 
 			drawBlocks();
+
 			gc.setColor(new Color(100, 100, 100));
 			gc.fillRect(player.x, player.y, player.width, player.height);
 			gc.fillRect(player2.x, player2.y, player2.width, player2.height);
@@ -117,6 +131,8 @@ public class Main implements ActionListener {
 			player.fall();
 			player2.fall();
 		}
+
+
 	}
 
 	void updatePlayer2Position() {
@@ -189,4 +205,16 @@ public class Main implements ActionListener {
 			timer.stop();
 		}
 	}
+
+	static BufferedImage loadImage(String fileName) {
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(fileName).getAbsoluteFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An image failed to load", "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
+		return img;
+	}
+
 }
