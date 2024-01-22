@@ -1,7 +1,3 @@
-
-import hsa2.GraphicsConsole;
-import java.awt.Color;
-import java.awt.Color.*;
 import java.awt.*;
 
 public class Player extends Rectangle{
