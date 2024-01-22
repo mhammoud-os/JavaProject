@@ -249,7 +249,6 @@ public class Main implements ActionListener {
 		if (!timer2.isRunning() && !player2.fall) {
 			timer2.start();
 			player2.jumping = true;
-			playJumpSound();
 		}
 		if (gc.isKeyDown(83))
 			player2.jumpdown();
