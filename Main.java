@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.sound.sampled.*;
+
 
 public class Main implements ActionListener {
 	GraphicsConsole gc = new GraphicsConsole(1280, 720);
@@ -30,6 +32,8 @@ public class Main implements ActionListener {
 	static BufferedImage HeartImg;
 	int currentFrame = 0;
 	boolean PlayerMoveRight = true;
+	private Clip backgroundMusic;
+	private Clip jumpSound;
 
 	public static void main(String[] args) {
 		new Main();
@@ -37,6 +41,8 @@ public class Main implements ActionListener {
 
 	Main() {
 		setup();
+		loadAudio();
+		playBackgroundMusic();
 		while (true) {
 			detectKeys();
 			drawGraphics();
@@ -66,6 +72,37 @@ public class Main implements ActionListener {
 		gc.clear();
 		gc.enableMouse();
 		gc.enableMouseMotion();
+	}
+
+	void loadAudio() {
+		try {
+			// Load background music
+			AudioInputStream bgMusicStream = AudioSystem.getAudioInputStream(new File("src/sounds/BGMusic.wav"));
+			backgroundMusic = AudioSystem.getClip();
+			backgroundMusic.open(bgMusicStream);
+
+			// Load jump sound effect
+			AudioInputStream jumpSoundStream = AudioSystem.getAudioInputStream(new File("src/sounds/jump.wav"));
+			jumpSound = AudioSystem.getClip();
+			jumpSound.open(jumpSoundStream);
+		} catch (Exception e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "Failed to load audio files", "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	void playBackgroundMusic() {
+		if (backgroundMusic != null) {
+			backgroundMusic.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+	}
+
+	void playJumpSound() {
+		if (jumpSound != null) {
+			jumpSound.stop(); // Stop any existing instances
+			jumpSound.setFramePosition(0); // Rewind to the beginning
+			jumpSound.start();
+		}
 	}
 
 	void createBlocks() {
@@ -200,6 +237,7 @@ public class Main implements ActionListener {
 		if (gc.isKeyDown(38) && !timer.isRunning() && !player.fall) {
 			timer.start();
 			player.jumping = true;
+			playJumpSound();
 		}
 		if (gc.isKeyDown(40))
 			player.jumpdown();
@@ -211,6 +249,7 @@ public class Main implements ActionListener {
 		if (!timer2.isRunning() && !player2.fall) {
 			timer2.start();
 			player2.jumping = true;
+			playJumpSound();
 		}
 		if (gc.isKeyDown(83))
 			player2.jumpdown();
