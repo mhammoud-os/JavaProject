@@ -108,7 +108,11 @@ public class Arena implements ActionListener {
 			}
 			
 			//if (checkLevel()) levelNum ++;
-			if (levelClicked) levelNum ++;
+			if (levelClicked) { 
+				levelNum ++;
+				levelNum %= 3;
+			
+			}
 			if (pvpClicked) Ai = !Ai;
 			levelClicked = false;
 			rulesClicked = false;
