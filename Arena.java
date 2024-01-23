@@ -1,4 +1,3 @@
-package graphics;
 import hsa2.GraphicsConsole;
 import java.awt.*;
 import java.util.*;
@@ -11,7 +10,6 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-import javax.swing.*;
 import javax.swing.Timer;
 import javax.sound.sampled.*;
 
@@ -19,20 +17,20 @@ public class Arena implements ActionListener {
 	//Window size
 	public static int winX = 1280;
 	public static int winY = 720;
-		
+
 	//Graphics Consoles
 	GraphicsConsole gc = new GraphicsConsole(winX, winY);
 	static GraphicsConsole gcIntro = new GraphicsConsole(winX, winY, "Intro Screen");
 	static GraphicsConsole gcRules = new GraphicsConsole(winX, winY, "Rules");
-	
+
 	Random rand = new Random();
 	Player player = new Player(10, 10, 10, 40, 40);
 	Player player2 = new Player(1250, 10, 10, 40, 40);
-	
+
 	//Timers
 	Timer timer = new Timer(10, this);
 	Timer timer2 = new Timer(10, this);
-	
+
 	static BufferedImage BackgroundImg, BlockImg, PlatformImg;
 	static BufferedImage[] pImagesRight = new BufferedImage[12];
 	static BufferedImage[] pImagesLeft = new BufferedImage[12];
@@ -42,38 +40,38 @@ public class Arena implements ActionListener {
 	int currentFrame = 0;
 	double time;
 	double time2;
-	
+
 	//Platforms
 	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
 	Platform leftSide = new Platform(-20, 0, 10, 720);
 	Platform rightSide = new Platform(1290, 0, 10, 720);
 	static int[][] blocks;
-	
+
 	//Fonts and colours
 	Font titleFont = new Font("Comic Sans MS", Font.PLAIN, 50);
 	Font bodyFont = new Font("Comic Sans MS", Font.PLAIN, 28);
 	Color blue1 = new Color(42, 81, 222);
 	Color green1 = new Color(21, 150, 23);
-	
+
 	//Start button variables
 	static int startX = winX/2 - 120;
 	static int startY = winY/2 - 100;
 	static int startW = 240;
 	static int startH = 80;
-		
+
 	//Rectangles
 	static Rectangle startButton = new Rectangle(startX, startY, startW, startH);
 	static Rectangle levelButton = new Rectangle(winX/2 - 90, winY/2 + 50, 180, 75);
 	static Rectangle questionMark = new Rectangle(winX - 100, winY - 100, 60, 60);
 	static Rectangle pvpButton = new Rectangle(winX/2 - 110, winY/2 + 160, 220, 75);
 	static Rectangle backToIntro = new Rectangle(winX/2 - 90, winY - 180, 180, 75);
-	
+
 	static int levelNum = 0;
-		
+
 	static int mouseX, mouseY;
-	
+
 	static BufferedImage logo;
-	
+
 	static Level levelB = new Level(levelNum);
 	static boolean levelClicked = false;
 	static boolean rulesClicked = false;
@@ -95,23 +93,23 @@ public class Arena implements ActionListener {
 		loadAudio();
 		playBackgroundMusic();
 
-		
+
 		while (!checkStart()) {
 			drawIntro();
 			showLevel();
 			drawRuleButton();
 			checkPvp();
 			checkRules();
-			
+
 			if (checkToIntro()) {
 				switchScreen(gcIntro);
 			}
-			
+
 			//if (checkLevel()) levelNum ++;
-			if (levelClicked) { 
+			if (levelClicked) {
 				levelNum ++;
 				levelNum %= 3;
-			
+
 			}
 			if (pvpClicked) Ai = !Ai;
 			levelClicked = false;
@@ -135,98 +133,98 @@ public class Arena implements ActionListener {
 			player2.timer = time2;
 			gc.sleep(30);
 		}
-			
-			gc.clear();
-			detectKeys();
-			drawGraphics();
 
-			gc.sleep(1000);
-			gc.dispose();
-			System. exit(0);
+		gc.clear();
+		detectKeys();
+		drawGraphics();
+
+		gc.sleep(1000);
+		gc.dispose();
+		System. exit(0);
 	}
-	
+
 	void setupIntro() {
 		//Set the visible screens
 		gcIntro.setVisible(true);
 		gc.setVisible(false);
 		gcRules.setVisible(false);
-		
+
 		//Set up other stuff
 		gcIntro.setAntiAlias(true);
 		gcIntro.setLocationRelativeTo(null);
 		//gcIntro.setBackgroundColor(new Color(222, 213, 42));
 		gcIntro.setBackgroundColor(new Color(108, 219, 230));
 		gcIntro.clear();
-		
+
 		//Enable the mouse functions
 		gcIntro.enableMouse();
 		gcIntro.enableMouseMotion();
 		gcIntro.getMouseClick();
 	}
-	
+
 	void drawIntro() {
-			//Welcome
-			gcIntro.setColor(blue1);
-			gcIntro.setFont(titleFont);
-			//gcIntro.drawString("Welcome to ", winX/2 - 325, winY/2 - 275);
-			logo = loadImage("src/imgs/leapDuelArenaLogo.png");
-			//gcIntro.drawImage(logo, winX/2 - 25, winY/2 - 375, 400, 150);
-			gcIntro.drawImage(logo, winX/2 - 275, winY/2 - 350, 550, 200);
-					
-			//Draw the start button
-			gcIntro.setFont(bodyFont);
-			gcIntro.setColor(green1);
-			gcIntro.fillRect(startX, startY, startW, startH);
-			gcIntro.setColor(Color.BLACK);
-			gcIntro.drawRect(startX, startY, startW, startH);
-					
-			gcIntro.setColor(blue1);
-			gcIntro.drawString("START!", startX + 60, startY + 50);
+		//Welcome
+		gcIntro.setColor(blue1);
+		gcIntro.setFont(titleFont);
+		//gcIntro.drawString("Welcome to ", winX/2 - 325, winY/2 - 275);
+		logo = loadImage("src/imgs/leapDuelArenaLogo.png");
+		//gcIntro.drawImage(logo, winX/2 - 25, winY/2 - 375, 400, 150);
+		gcIntro.drawImage(logo, winX/2 - 275, winY/2 - 350, 550, 200);
+
+		//Draw the start button
+		gcIntro.setFont(bodyFont);
+		gcIntro.setColor(green1);
+		gcIntro.fillRect(startX, startY, startW, startH);
+		gcIntro.setColor(Color.BLACK);
+		gcIntro.drawRect(startX, startY, startW, startH);
+
+		gcIntro.setColor(blue1);
+		gcIntro.drawString("START!", startX + 60, startY + 50);
 	}
-	
-	void setupRules() {	
+
+	void setupRules() {
 		//Set up other stuff
 		gcRules.setAntiAlias(true);
 		gcRules.setLocationRelativeTo(null);
-		
+
 		//gcIntro.setBackgroundColor(new Color(222, 213, 42));
 		gcRules.setBackgroundColor(new Color(108, 219, 230));
 		gcRules.clear();
-				
+
 		//Enable the mouse functions
 		gcRules.enableMouse();
 		gcRules.enableMouseMotion();
 		gcRules.getMouseClick();
 	}
-	
+
 	void drawRules() {
-			gc.clear();
-			gcRules.setColor(blue1);
-			gcRules.setFont(titleFont);
-			gcRules.drawString("Rules: ", winX/2 - 60, 150);
-			
-			gcRules.setFont(bodyFont);
-			gcRules.drawString("Move left, right, and jump with wasd or arrow keys.", winX/2 - 325, winY/2 - 100);
-			gcRules.drawString("The goal of the game is to jump on the other player.", winX/2 -  325, winY/2 - 50);
-			gcRules.drawString("You have 3 lives, and you lose one if you get jumped on.", winX/2 - 350, winY/2);
-			gcRules.drawString("You can play against the ai or another player.", winX/2 - 275, winY/2 + 50);
-			gcRules.drawString("Last one standing wins!", winX/2 - 150, winY/2 + 100);
-			
-			gcRules.setColor(green1);
-			gcRules.fillRect(winX/2 - 90, winY - 180, 180, 75);
-			gcRules.setColor(Color.BLACK);
-			gcRules.drawRect(winX/2 - 90, winY - 180, 180, 75);
-			gcRules.setColor(Color.WHITE);
-			gcRules.drawString("Back", winX/2 - 45, winY - 135);
+		gc.clear();
+		gcRules.setColor(blue1);
+		gcRules.setFont(titleFont);
+		gcRules.drawString("Rules: ", winX/2 - 60, 150);
+
+		gcRules.setFont(bodyFont);
+		gcRules.drawString("Move left, right, and jump with wasd or arrow keys.", winX/2 - 325, winY/2 - 100);
+		gcRules.drawString("The goal of the game is to jump on the other player.", winX/2 -  325, winY/2 - 50);
+		gcRules.drawString("You have 3 lives, and you lose one if you get jumped on.", winX/2 - 350, winY/2);
+		gcRules.drawString("You can play against the ai or another player.", winX/2 - 275, winY/2 + 50);
+		gcRules.drawString("Last one standing wins!", winX/2 - 150, winY/2 + 100);
+
+		gcRules.setColor(green1);
+		gcRules.fillRect(winX/2 - 90, winY - 180, 180, 75);
+		gcRules.setColor(Color.BLACK);
+		gcRules.drawRect(winX/2 - 90, winY - 180, 180, 75);
+		gcRules.setColor(Color.WHITE);
+		gcRules.drawString("Back", winX/2 - 45, winY - 135);
 	}
-	
+
 	/**
 	 * Checks if a button has been clicked
 	 */
 	static boolean checkStart() {
 		mouseX = gcIntro.getMouseX();
 		mouseY = gcIntro.getMouseY();
-		
+
 		if (gcIntro.getMouseClick() != 0) {
 			if (startButton.contains(mouseX, mouseY)) {
 				return true;
@@ -244,15 +242,15 @@ public class Arena implements ActionListener {
 	static boolean checkToIntro() {
 		mouseX = gcRules.getMouseX();
 		mouseY = gcRules.getMouseY();
-		
+
 		if (gcRules.getMouseClick() != 0) {
 			if (backToIntro.contains(mouseX, mouseY)) {
 				return true;
 			}
-		} 
+		}
 		return false;
 	}
-	
+
 	/**
 	 * Switches to the main graphics console
 	 */
@@ -262,62 +260,62 @@ public class Arena implements ActionListener {
 		gc.setVisible(false);
 		gcRules.setVisible(false);
 		g.setVisible(true);
-		
+
 		gcIntro.clear();
 		gc.clear();
-		
+
 		gc.setLocationRelativeTo(null);
 		gc.setBackgroundColor(Color.BLUE);
 	}
-	
+
 	void showLevel() {
 		levelB = new Level(levelNum);
-		
+
 		//gcIntro.setColor(Color.BLUE);
 		//gcIntro.drawString("Level:", 75, 50);
-		
-			gcIntro.setColor(levelB.levelBg);
-			gcIntro.fillRect(winX/2 - 90, winY/2 + 50, 180, 75);
-			gcIntro.setColor(Color.BLACK);
-			gcIntro.drawRect(winX/2 - 90, winY/2 + 50, 180, 75);
-			
-			gcIntro.setColor(Color.WHITE);
-			gcIntro.drawString(levelB.levelName, winX/2 - 50, winY/2 + 100);
+
+		gcIntro.setColor(levelB.levelBg);
+		gcIntro.fillRect(winX/2 - 90, winY/2 + 50, 180, 75);
+		gcIntro.setColor(Color.BLACK);
+		gcIntro.drawRect(winX/2 - 90, winY/2 + 50, 180, 75);
+
+		gcIntro.setColor(Color.WHITE);
+		gcIntro.drawString(levelB.levelName, winX/2 - 50, winY/2 + 100);
 	}
-	
+
 	void drawRuleButton() {
-			gcIntro.setColor(Color.GRAY);
-			gcIntro.fillOval(winX - 100, winY - 100, 60, 60);
-			gcIntro.setFont(bodyFont);
-			gcIntro.setColor(Color.WHITE);
-			gcIntro.drawString("?", winX - 75, winY - 60);
+		gcIntro.setColor(Color.GRAY);
+		gcIntro.fillOval(winX - 100, winY - 100, 60, 60);
+		gcIntro.setFont(bodyFont);
+		gcIntro.setColor(Color.WHITE);
+		gcIntro.drawString("?", winX - 75, winY - 60);
 	}
-	
+
 	void checkRules() {
 		if (rulesClicked) {
-				switchScreen(gcRules);
-				drawRules();
+			switchScreen(gcRules);
+			drawRules();
 		}
 	}
-	
+
 	void checkPvp() {
-			if (Ai) {
-				gcIntro.setColor(blue1.brighter());
-				gcIntro.fillRect(winX/2 - 110, winY/2 + 160, 220, 75);
-				gcIntro.setColor(Color.BLACK);
-				gcIntro.drawRect(winX/2 - 110, winY/2 + 160, 220, 75);
-				gcIntro.setColor(Color.WHITE);
-				gcIntro.drawString("Player vs Ai", winX/2 - 80, winY/2 + 210);
-			} else {
-				gcIntro.setColor(blue1.brighter());
-				gcIntro.fillRect(winX/2 - 110, winY/2 + 160, 220, 75);
-				gcIntro.setColor(Color.BLACK);
-				gcIntro.drawRect(winX/2 - 110, winY/2 + 160, 220, 75);
-				gcIntro.setColor(Color.WHITE);
-				gcIntro.drawString("Player vs Player", winX/2 - 100, winY/2 + 210);
-			}
+		if (Ai) {
+			gcIntro.setColor(blue1.brighter());
+			gcIntro.fillRect(winX/2 - 110, winY/2 + 160, 220, 75);
+			gcIntro.setColor(Color.BLACK);
+			gcIntro.drawRect(winX/2 - 110, winY/2 + 160, 220, 75);
+			gcIntro.setColor(Color.WHITE);
+			gcIntro.drawString("Player vs Ai", winX/2 - 80, winY/2 + 210);
+		} else {
+			gcIntro.setColor(blue1.brighter());
+			gcIntro.fillRect(winX/2 - 110, winY/2 + 160, 220, 75);
+			gcIntro.setColor(Color.BLACK);
+			gcIntro.drawRect(winX/2 - 110, winY/2 + 160, 220, 75);
+			gcIntro.setColor(Color.WHITE);
+			gcIntro.drawString("Player vs Player", winX/2 - 100, winY/2 + 210);
+		}
 	}
-	
+
 	void setup() {
 		createBlocks();
 		gc.setAntiAlias(true);
@@ -456,7 +454,7 @@ public class Arena implements ActionListener {
 				if (player2.movingRight)
 					gc.drawImage(bImagesRight[currentFrame], player2.x - 40, player2.y - 55, player2.width + 80, player2.height + 80);
 				else gc.drawImage(bImagesLeft[currentFrame], player2.x - 40, player2.y - 55, player2.width + 80, player2.height + 80);
-				
+
 			}
 
 			currentFrame = (currentFrame + 1) % 12;
@@ -467,7 +465,7 @@ public class Arena implements ActionListener {
 			player2.fall();
 		}
 	}
-	
+
 	void updatePlayer2Position() {
 		int distanceX = player.x - player2.x;
 		int distanceY = player.y - player2.y;
@@ -493,10 +491,10 @@ public class Arena implements ActionListener {
 				player2.moveLeft();
 		}
 	}
-	
-	
+
+
 	void detectKeys() {
-		if (Ai) { 
+		if (Ai) {
 			updatePlayer2Position();
 			if (!timer2.isRunning() && !player2.fall) {
 				playJumpSound();
@@ -529,8 +527,8 @@ public class Arena implements ActionListener {
 		}
 		if (gc.isKeyDown(40)) player.jumpdown();
 	}
-	
-	
+
+
 	@Override
 	public void actionPerformed(ActionEvent ev) {
 		if (ev.getSource() == timer2) {
@@ -550,20 +548,20 @@ public class Arena implements ActionListener {
 			timer.stop();
 		}
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param fileName	name of the file
 	 * @return the image
 	 */
 	static BufferedImage loadImage(String fileName) {
-		  BufferedImage img = null;
-		  try {
-		    img = ImageIO.read(new File(fileName).getAbsoluteFile());
-		  } catch (IOException e) {
-		    e.printStackTrace();
-		    JOptionPane.showMessageDialog(null, "An image failed to load", "ERROR", JOptionPane.ERROR_MESSAGE);
-		  }
-		  return img;
+		BufferedImage img = null;
+		try {
+			img = ImageIO.read(new File(fileName).getAbsoluteFile());
+		} catch (IOException e) {
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "An image failed to load", "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
+		return img;
+	}
 }

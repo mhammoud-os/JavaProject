@@ -1,4 +1,5 @@
 import hsa2.GraphicsConsole;
+
 import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
@@ -11,13 +12,15 @@ import javax.sound.sampled.*;
 
 
 public class Main implements ActionListener {
+	// The Window
 	GraphicsConsole gc = new GraphicsConsole(1280, 720);
+
+	// Global Variables
 	Random rand = new Random();
 	Player player = new Player(10, 10, 10, 40, 40);
 	Player player2 = new Player(1250, 10, 4, 40, 40);
 	javax.swing.Timer timer = new javax.swing.Timer(10, this);
 	javax.swing.Timer timer2 = new javax.swing.Timer(10, this);
-
 	double time, time2;
 	Platform mainPlatform = new Platform(0, 720 - 100, 1280, 100);
 	Platform leftSide = new Platform(-20, 0, 10, 720);
@@ -41,6 +44,7 @@ public class Main implements ActionListener {
 
 	Main() {
 		setup();
+		// Load audio files, then start the Background Music.
 		loadAudio();
 		playBackgroundMusic();
 		while (true) {
@@ -56,6 +60,7 @@ public class Main implements ActionListener {
 	void setup() {
 		createBlocks();
 		gc.setAntiAlias(true);
+		// Save all the images to global variables.
 		BackgroundImg = loadImage("src/imgs/leapDuelArenaBG.png");
 		BlockImg = loadImage("src/imgs/blockImage.png");
 		PlatformImg = loadImage("src/imgs/groundPlatformImg.png");
@@ -117,15 +122,16 @@ public class Main implements ActionListener {
 	}
 
 	void drawBlocks() {
+		// Display the amount of lives left.
 		gc.drawImage(PlatformImg, 0, 590, 1280, 210);
 		for (int i = 0; i!=player.lifeCount; i++) {
 			gc.drawImage(HeartImg, 50 + (i*50), 650, 50, 50);
 		}
-
 		for (int i = 0; i!=player2.lifeCount; i++) {
 			gc.drawImage(HeartImg, 1230 - (50 + (i*50)), 650, 50, 50);
 		}
 
+		// Set up the platforms.
 		for (int i = 0; i < blocks.length; i++) {
 			for (int j = 0; j < blocks[0].length; j++) {
 				if (blocks[i][j] == 1) {
@@ -171,6 +177,7 @@ public class Main implements ActionListener {
 			gc.setColor(new Color(100, 100, 100, 0));
 			gc.fillRect(player.x, player.y, player.width, player.height);
 
+			// Change sprite based on the direction the character is moving.
 			if (PlayerMoveRight)
 				gc.drawImage(pImagesRight[currentFrame], player.x - 40, player.y - 55, player.width + 80, player.height + 80);
 			else
@@ -197,14 +204,13 @@ public class Main implements ActionListener {
 	void updatePlayer2Position() {
 		int distanceX = player.x - player2.x;
 		int distanceY = player.y - player2.y;
-		int moveSpeed = 2;
-		int constantMoveSpeed = 1;
 
+		// Move towards the player, and jump if nearby or below.
 		if (Math.abs(distanceX) > Math.abs(distanceY)) {
 			if (distanceX > 0)
-				player2.moveRight(moveSpeed);
+				player2.moveRight();
 			else
-				player2.moveLeft(moveSpeed);
+				player2.moveLeft();
 		} else {
 			if (distanceY > 0)
 				player2.fall = true;
@@ -216,9 +222,9 @@ public class Main implements ActionListener {
 
 		if (!player2.jumping) {
 			if (distanceX > 50)
-				player2.moveRight(constantMoveSpeed);
+				player2.moveRight();
 			else if (distanceX < -50)
-				player2.moveLeft(constantMoveSpeed);
+				player2.moveLeft();
 		}
 	}
 

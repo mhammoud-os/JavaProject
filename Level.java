@@ -5,8 +5,6 @@ public class Level{
 	String levelName;
 	
 	Level(int l) {
-		
-		
 		if (l%3 == 0) {
 			levelName = "Easy";
 			levelBg = Color.PINK;
