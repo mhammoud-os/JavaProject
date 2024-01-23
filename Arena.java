@@ -182,6 +182,9 @@ public class Arena implements ActionListener {
 		gcIntro.drawString("START!", startX + 60, startY + 50);
 	}
 
+	/**
+ 	 * Sets up the rules screen
+  	 */
 	void setupRules() {
 		//Set up other stuff
 		gcRules.setAntiAlias(true);
@@ -197,6 +200,9 @@ public class Arena implements ActionListener {
 		gcRules.getMouseClick();
 	}
 
+	/*
+ 	 * Draws the rules
+   	 */
 	void drawRules() {
 		gc.clear();
 		gcRules.setColor(blue1);
@@ -239,6 +245,9 @@ public class Arena implements ActionListener {
 		return false;
 	}
 
+	/*
+	 * Checks if the user wants to go back to the intro screen
+  	 */
 	static boolean checkToIntro() {
 		mouseX = gcRules.getMouseX();
 		mouseY = gcRules.getMouseY();
@@ -252,7 +261,8 @@ public class Arena implements ActionListener {
 	}
 
 	/**
-	 * Switches to the main graphics console
+	 * Switches to another graphics console
+  	 * @param g	the graphics console to switch to
 	 */
 	void switchScreen(GraphicsConsole g) {
 		gcIntro.setVisible(false);
@@ -268,6 +278,9 @@ public class Arena implements ActionListener {
 		gc.setBackgroundColor(Color.BLUE);
 	}
 
+	/*
+ 	 * Shows the level button
+   	 */
 	void showLevel() {
 		levelB = new Level(levelNum);
 
@@ -283,6 +296,9 @@ public class Arena implements ActionListener {
 		gcIntro.drawString(levelB.levelName, winX/2 - 50, winY/2 + 100);
 	}
 
+	/*
+ 	 * Draws the rule button
+   	 */
 	void drawRuleButton() {
 		gcIntro.setColor(Color.GRAY);
 		gcIntro.fillOval(winX - 100, winY - 100, 60, 60);
@@ -291,6 +307,9 @@ public class Arena implements ActionListener {
 		gcIntro.drawString("?", winX - 75, winY - 60);
 	}
 
+	/*
+ 	 * Switches to the rule screen if the user clicks the rule button
+   	 */
 	void checkRules() {
 		if (rulesClicked) {
 			switchScreen(gcRules);
@@ -298,6 +317,9 @@ public class Arena implements ActionListener {
 		}
 	}
 
+	/**
+ 	 * Draws the player vs player or player vs ai button
+   	 */
 	void checkPvp() {
 		if (Ai) {
 			gcIntro.setColor(blue1.brighter());
@@ -342,6 +364,7 @@ public class Arena implements ActionListener {
 			*/
 		}
 	}
+	
 	void loadAudio() {
 		try {
 			// Load background music
@@ -383,6 +406,7 @@ public class Arena implements ActionListener {
 			}
 		}
 	}
+	
 	void drawBlocks() {
 
 		gc.drawImage(PlatformImg, 0, 590, 1280, 210);
@@ -419,6 +443,7 @@ public class Arena implements ActionListener {
 			}
 		}
 	}
+	
 	void drawGraphics() {
 		synchronized (gc) {
 			gc.clear();
@@ -550,7 +575,7 @@ public class Arena implements ActionListener {
 	}
 
 	/**
-	 *
+	 * Loads an image
 	 * @param fileName	name of the file
 	 * @return the image
 	 */
